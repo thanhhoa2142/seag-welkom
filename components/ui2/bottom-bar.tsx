@@ -2,7 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Home, Map, UserCircle, LucideIcon } from "lucide-react";
+import {
+  Home,
+  UserCircle,
+  LucideIcon,
+  Rocket,
+  MessageCircleMoreIcon,
+} from "lucide-react";
 
 type NavItem = {
   href: string;
@@ -17,14 +23,14 @@ const navItems: NavItem[] = [
     icon: Home,
   },
   {
-    href: "/schedule",
-    label: "Schedule",
-    icon: Calendar,
+    href: "/challenges",
+    label: "Challenges",
+    icon: Rocket,
   },
   {
-    href: "/venues",
-    label: "Venues",
-    icon: Map,
+    href: "/chat",
+    label: "Chat",
+    icon: MessageCircleMoreIcon,
   },
   {
     href: "/profile",

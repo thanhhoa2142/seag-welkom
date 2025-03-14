@@ -1,11 +1,5 @@
-import BottomBar from "./BottomBar";
+import ScreenWrap from "@/components/ui2/screen-wrap";
 
 export default function Layout({ children }: PropsWithChildren) {
-  return (
-    <div className="h-dvh flex flex-col">
-      <main className="grow overflow-auto">{children}</main>
-
-      <BottomBar />
-    </div>
-  );
+  return <ScreenWrap>{children}</ScreenWrap>;
 }
