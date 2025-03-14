@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
         include: [/\.tsx?$/],
         imports: [
           "react",
+          { from: "react", imports: ["PropsWithChildren"], type: true },
           { from: "sonner", imports: ["toast"] },
           {
             from: "@/lib/constants",
