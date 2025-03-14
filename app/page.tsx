@@ -1,12 +1,28 @@
-export default function Home() {
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Onboarding",
+  description: "Tell us about yourself",
+};
+
+export default function OnboardingPage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, provident
-        soluta quaerat id accusantium in nemo voluptatem ut. Doloremque dolorem
-        accusamus quisquam ea ab culpa harum voluptates minus consequuntur
-        inventore!
-      </main>
+    <div className="container relative min-h-screen py-8">
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[550px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Welcome to Welkom!
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Help us personalize your experience by answering a few questions
+          </p>
+
+          <Button asChild>
+            <Link href={"/sign-in"}>Sign in</Link>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
