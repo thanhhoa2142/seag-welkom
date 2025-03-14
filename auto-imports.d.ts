@@ -33,6 +33,9 @@ declare global {
 // for type re-export
 declare global {
   // @ts-ignore
+  export type { Metadata } from 'next'
+  import('next')
+  // @ts-ignore
   export type { PropsWithChildren } from 'react'
   import('react')
 }
