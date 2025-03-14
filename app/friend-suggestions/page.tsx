@@ -1,4 +1,4 @@
-import { FriendSuggestions } from "@/components/friends/friend-suggestions";
+import { FriendSuggestions } from "../friends/components/friend-suggestions";
 
 export const metadata: Metadata = {
   title: "Friend Suggestions",

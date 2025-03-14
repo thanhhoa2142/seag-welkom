@@ -6,15 +6,13 @@ export const metadata: Metadata = {
 };
 
 interface ChallengePageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
-export default function ChallengePage({ params }: ChallengePageProps) {
+export default async function ChallengePage({ params }: ChallengePageProps) {
   return (
     <div className="container relative min-h-screen py-8">
-      <ChallengeDetail challengeId={params.id} />
+      <ChallengeDetail challengeId={(await params).id} />
     </div>
   );
 }

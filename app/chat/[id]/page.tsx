@@ -6,15 +6,13 @@ export const metadata: Metadata = {
 };
 
 interface ChatPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
-export default function ChatPage({ params }: ChatPageProps) {
+export default async function ChatPage({ params }: ChatPageProps) {
   return (
     <div className="container relative min-h-screen">
-      <ChatWindow friendId={params.id} />
+      <ChatWindow friendId={(await params).id} />
     </div>
   );
 }
