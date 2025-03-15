@@ -3,6 +3,9 @@ import autoImport from "unplugin-auto-import/webpack";
 import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [{ source: "/", destination: "/home", permanent: true }];
+  },
   images: {
     domains: ["lh5.googleusercontent.com"],
   },

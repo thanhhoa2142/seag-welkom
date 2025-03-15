@@ -1,5 +1,3 @@
-/** @format */
-
 import { PropsWithChildren } from "react";
 import { PageContainer } from "./page-container";
 import BottomBar from "@/components/ui2/bottom-bar";
