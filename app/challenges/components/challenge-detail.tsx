@@ -1,90 +1,187 @@
-"use client";
+/** @format */
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Checkbox } from "@/components/ui/checkbox";
+'use client';
 
-import { Trophy } from "lucide-react";
-import { PageContainer } from "@/components/ui2/page-container";
-import { GetLocationByIdReturnType } from "@/app/actions/challenges";
+import { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Star } from 'lucide-react';
+import { PageContainer } from '@/components/ui2/page-container';
+import { getMockLocationById, mockLocation } from '@/lib/mockData';
+import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
 
-interface ChallengeDetailProps {
-  location: NonNullable<GetLocationByIdReturnType>;
-}
+type Task = {
+  id: string;
+  description: string;
+  isCompleted: boolean;
+  thumbnail?: string;
+};
 
-export function ChallengeDetail({ location }: ChallengeDetailProps) {
+export function ChallengeDetail() {
   const router = useRouter();
-  const [tasks, setTasks] = useState(location.tasks);
+  const [tasks, setTasks] = useState<Task[]>(mockLocation.tasks);
+
+  const { data: location, isLoading } = useQuery({
+    queryKey: ['location', 'shrine-of-remembrance'],
+    queryFn: () => getMockLocationById('shrine-of-remembrance'),
+    initialData: null,
+  });
+
+  useEffect(() => {
+    if (location) {
+      setTasks(location.tasks);
+    }
+  }, [location]);
+
   const progress = useMemo(() => {
+    if (!tasks.length) return 0;
     const completedTasks = tasks.filter((task) => task.isCompleted).length;
-    return (completedTasks / tasks.length) * 100;
+    return Math.round((completedTasks / tasks.length) * 100);
   }, [tasks]);
 
   const handleTaskToggle = async (taskId: string) => {
     setTasks((prev) =>
       prev.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.isCompleted } : task
+        task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
       )
     );
-
-    toast("Task Updated " + location.id, {
-      description: "Your progress has been saved",
+    // Simulate saving progress
+    console.log('Task Updated ' + (location?.id || 'loc1'), {
+      description: 'Your progress has been saved',
     });
   };
 
-  return (
-    <PageContainer>
-      <Button variant="ghost" onClick={() => router.back()}>
-        ← Back to Challenges
-      </Button>
+  if (isLoading || !location) {
+    return <div>Loading...</div>;
+  }
 
-      <CardTitle className="text-2xl">{location.name}</CardTitle>
-      <p className="text-muted-foreground mt-2 line-clamp-2">
-        {location.description}
-      </p>
-      <Badge variant="secondary">{location.tags.join(", ")}</Badge>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
-          {/* <div className="flex items-center">
-            <Users className="mr-2 h-4 w-4" />
-            {location.participants} participants
+  return (
+    <PageContainer className=' text-gray-800 min-h-screen pb-20'>
+      <div className='relative h-48 md:h-64 w-full'>
+        <Image
+          src={location.bannerImage || '/default-banner.jpg'}
+          alt={location.name}
+          layout='fill'
+          objectFit='cover'
+        />
+      </div>
+
+      {/* Challenge Content */}
+      <div className='p-4 space-y-6'>
+        {/* Header */}
+        <div className='space-y-1'>
+          <div className='flex justify-between items-start'>
+            <h1 className='text-2xl font-bold'>{location.name}</h1>
+            <div className='flex items-center'>
+              <Star className='h-5 w-5 text-yellow-500 fill-yellow-500' />
+              <span className='ml-1 font-bold'>{location.reward || '300'}</span>
+            </div>
           </div>
-          <div className="flex items-center">
-            <Clock className="mr-2 h-4 w-4" />
-            {location.daysLeft} days left
-          </div> */}
-          <div className="flex items-center">
-            <Trophy className="mr-2 h-4 w-4" />
-            {progress}% completed
+
+          <div className='flex items-center text-sm text-gray-400 space-x-2'>
+            <span>{location.difficulty || 'Hard'}</span>
+            <span>•</span>
+            <span>{location.distance || '5.0'} km</span>
+            <span>•</span>
+            <span>{location.time || '2h 5m'}</span>
+          </div>
+
+          <p className='text-gray-400 mt-2 text-sm'>
+            {location.description ||
+              'Built to honor Australian soldiers, the Shrine offers breathtaking city views. Every year, on November 11 at 11 AM, a ray of sunlight hits the Remembrance Stone.'}
+          </p>
+        </div>
+
+        {/* Progress Bar */}
+        <div className='w-full'>
+          <div className='h-1 bg-green-800 rounded-full overflow-hidden'>
+            <div
+              className='h-full bg-green-500'
+              style={{ width: `${progress}%` }}
+            ></div>
           </div>
         </div>
 
-        <Progress value={progress} />
+        {/* Tasks Section */}
+        <div className='space-y-2'>
+          <h2 className='text-lg font-semibold'>Tasks</h2>
+          <div className='space-y-4'>
+            {tasks
+              .filter((task) => !task.isCompleted)
+              .map((task) => (
+                <div key={task.id} className='flex items-start space-x-4'>
+                  <div
+                    onClick={() => handleTaskToggle(task.id)}
+                    className='mt-1 h-5 w-5 rounded-full border border-gray-400 flex-shrink-0 cursor-pointer'
+                  />
+                  <div className='flex-1'>
+                    <p className='text-gray-800 font-medium'>Eternal Flame</p>
+                    <p className='text-gray-400 text-sm'>
+                      Capture a photo of the Eternal Flame, symbolizing
+                      remembrance
+                    </p>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
 
-        <div className="space-y-4">
-          <h3 className="font-semibold">Tasks</h3>
-          {location.tasks.map((task) => (
-            <div key={task.id} className="flex items-start space-x-4">
-              <Checkbox
-                checked={task.isCompleted}
-                onCheckedChange={() => handleTaskToggle(task.id)}
-              />
-              <div className="flex-1 space-y-1">
-                <p
-                  className={
-                    task.isCompleted ? "line-through text-muted-foreground" : ""
-                  }
-                >
-                  {task.description}
+        {/* Completed Section */}
+        <div className='space-y-2'>
+          <h2 className='text-lg font-semibold'>Completed</h2>
+          <div className='space-y-4'>
+            {tasks
+              .filter((task) => task.isCompleted)
+              .map((task) => (
+                <div key={task.id} className='flex items-start space-x-4'>
+                  <div className='mt-1 h-5 w-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0'>
+                    <span className='text-gray-800 text-xs'>✓</span>
+                  </div>
+                  <div className='flex-1'>
+                    <p className='text-gray-300'>Inside the Sanctuary</p>
+                    <p className='text-gray-400 text-sm mb-2'>
+                      Capture the statue of the Unknown Soldier inside the
+                      Shrine.
+                    </p>
+                    <div className='border border-gray-600 rounded-lg p-1 inline-block'>
+                      <Image
+                        src={task.thumbnail || '/api/placeholder/90/60'}
+                        alt='Task completion'
+                        width={90}
+                        height={60}
+                        className='rounded-md'
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+            <div className='flex items-start space-x-4'>
+              <div className='mt-1 h-5 w-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0'>
+                <span className='text-gray-800 text-xs'>✓</span>
+              </div>
+              <div className='flex-1'>
+                <p className='text-gray-300'>Eternal Flame</p>
+                <p className='text-gray-400 text-sm'>
+                  Capture a photo of the Eternal Flame, symbolizing remembrance
                 </p>
               </div>
             </div>
-          ))}
+          </div>
         </div>
+      </div>
+
+      {/* Navigation Bar */}
+      <div className='fixed bottom-0 left-0 right-0 border-t flex justify-between py-4 px-6'>
+        <Button
+          variant='ghost'
+          onClick={() => router.back()}
+          className='text-gray-400'
+        >
+          ← Back
+        </Button>
       </div>
     </PageContainer>
   );

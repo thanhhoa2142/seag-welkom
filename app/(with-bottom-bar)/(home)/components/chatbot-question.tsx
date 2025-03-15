@@ -107,7 +107,7 @@ export default function Chatbot() {
           <CardHeader className='p-3 flex flex-row items-center justify-between bg-primary text-primary-foreground'>
             <div className='font-semibold flex items-center'>
               <MessageCircle className='mr-2 h-4 w-4' />
-              Chatbot
+              Doofin
             </div>
             <div className='flex space-x-2'>
               <Button

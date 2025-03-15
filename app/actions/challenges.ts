@@ -1,9 +1,11 @@
-"use server";
+/** @format */
 
-import { z } from "zod";
-import { prisma } from "@/lib/db";
-import { revalidatePath } from "next/cache";
-import { Prisma } from "@prisma/client";
+'use server';
+
+import { z } from 'zod';
+import { prisma } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
+import { Prisma } from '@prisma/client';
 
 const LocationSchema = z.object({
   name: z.string().min(1),
@@ -52,8 +54,8 @@ export async function getNearbyLocations(
 
     return { success: true, data: locations };
   } catch (error) {
-    console.error("Failed to fetch nearby locations:", error);
-    return { success: false, error: "Failed to fetch nearby locations" };
+    console.error('Failed to fetch nearby locations:', error);
+    return { success: false, error: 'Failed to fetch nearby locations' };
   }
 }
 
@@ -86,13 +88,13 @@ export async function getLocationDetails(locationId: string) {
     });
 
     if (!location) {
-      return { success: false, error: "Location not found" };
+      return { success: false, error: 'Location not found' };
     }
 
     return { success: true, data: location };
   } catch (error) {
-    console.error("Failed to fetch location details:", error);
-    return { success: false, error: "Failed to fetch location details" };
+    console.error('Failed to fetch location details:', error);
+    return { success: false, error: 'Failed to fetch location details' };
   }
 }
 
@@ -104,11 +106,11 @@ export async function createLocation(data: z.infer<typeof LocationSchema>) {
       data: validatedData,
     });
 
-    revalidatePath("/challenges");
+    revalidatePath('/challenges');
     return { success: true, data: location };
   } catch (error) {
-    console.error("Failed to create location:", error);
-    return { success: false, error: "Failed to create location" };
+    console.error('Failed to create location:', error);
+    return { success: false, error: 'Failed to create location' };
   }
 }
 
@@ -126,12 +128,12 @@ export async function updateLocation(
       data: validatedData,
     });
 
-    revalidatePath("/challenges");
+    revalidatePath('/challenges');
     revalidatePath(`/challenges/${locationId}`);
     return { success: true, data: location };
   } catch (error) {
-    console.error("Failed to update location:", error);
-    return { success: false, error: "Failed to update location" };
+    console.error('Failed to update location:', error);
+    return { success: false, error: 'Failed to update location' };
   }
 }
 
@@ -151,7 +153,7 @@ export async function getPopularLocations() {
         tasks: {
           take: 3,
           orderBy: {
-            createdAt: "desc",
+            createdAt: 'desc',
           },
           select: {
             id: true,
@@ -161,7 +163,7 @@ export async function getPopularLocations() {
       },
       orderBy: {
         tasks: {
-          _count: "desc",
+          _count: 'desc',
         },
       },
       take: 10,
@@ -169,8 +171,8 @@ export async function getPopularLocations() {
 
     return { success: true, data: locations };
   } catch (error) {
-    console.error("Failed to fetch popular locations:", error);
-    return { success: false, error: "Failed to fetch popular locations" };
+    console.error('Failed to fetch popular locations:', error);
+    return { success: false, error: 'Failed to fetch popular locations' };
   }
 }
 
