@@ -1,3 +1,5 @@
+import { LocationTag } from "@prisma/client";
+
 export const countryOptions = [
   { value: "AF", label: "Afghanistan" },
   { value: "AX", label: "Åland Islands" },
@@ -88,7 +90,7 @@ export const mockUser: User = {
   points: 300,
 };
 
-export const mockStoreItems: StoreItem = [
+export const mockStoreItems: StoreItem[] = [
   {
     id: "1",
     name: "Lamborghini Urus",
@@ -122,3 +124,12 @@ export const mockStoreItems: StoreItem = [
     exchanged: 128,
   },
 ];
+
+export const pointToGetBadge = 20;
+
+export const categoryTitleMap: Record<LocationTag, string> = {
+  HISTORICAL: "🏛️ Historian",
+  ART: "🎨 Artist",
+  CULTURAL: "🥮 Aficionado",
+  NATURE: "🍀 Nature Lover",
+};

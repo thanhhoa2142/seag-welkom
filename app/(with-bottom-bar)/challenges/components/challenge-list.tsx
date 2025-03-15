@@ -7,13 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LocationTag } from "@prisma/client";
 import ChallengeItem from "./challenge-item";
 import Link from "next/link";
-
-const categoryTitleMap: Record<LocationTag, string> = {
-  HISTORICAL: "🏛️ Historian",
-  ART: "🎨 Artist",
-  CULTURAL: "🥮 Cultural enthusiast",
-  NATURE: "🍀 Nature Lover",
-};
+import { categoryTitleMap } from "@/lib/constants";
 
 export function ChallengeList() {
   const [selectedCategory, setSelectedCategory] = useState<LocationTag>(

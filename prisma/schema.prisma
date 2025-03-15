@@ -16,6 +16,8 @@ datasource db {
 model User {
   id           String   @id @default(uuid())
   phoneNumber  String   @unique @map("phone_number")
+  email        String?  @unique
+  bio          String?  @db.Text
   username     String   @unique
   passwordHash String   @map("password_hash")
   createdAt    DateTime @default(now()) @map("created_at")
@@ -123,7 +125,7 @@ model Task {
   id          String   @id @default(uuid())
   locationId  String   @map("location_id")
   description String   @db.Text
-  points      Int      @default(1)
+  points      Int      @default(10)
   photoUrl    String?  @map("photo_url")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
@@ -150,14 +152,13 @@ model UserTask {
 }
 
 model Reward {
-  id             String     @id @default(uuid())
-  type           RewardType
+  id             String   @id @default(uuid())
   name           String
-  description    String?    @db.Text
-  pointsRequired Int        @map("points_required")
-  isHidden       Boolean    @default(false) @map("is_hidden")
-  createdAt      DateTime   @default(now()) @map("created_at")
-  updatedAt      DateTime   @updatedAt @map("updated_at")
+  description    String   @db.Text
+  photoUrl       String   @map("photo_url")
+  pointsRequired Int      @map("points_required")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
   // Relations
   userRewards UserReward[]
@@ -170,7 +171,6 @@ model UserReward {
   id         String    @id @default(uuid())
   userId     String    @map("user_id")
   rewardId   String    @map("reward_id")
-  earnedAt   DateTime  @default(now()) @map("earned_at")
   isRedeemed Boolean   @default(false) @map("is_redeemed")
   redeemedAt DateTime? @map("redeemed_at")
 
@@ -241,13 +241,6 @@ enum ConnectionStatus {
   PENDING
   ACCEPTED
   REJECTED
-}
-
-enum RewardType {
-  BADGE
-  PHYSICAL_SWAG
-  HIDDEN_TREASURE
-  ACHIEVEMENT
 }
 
 enum LocationTag {

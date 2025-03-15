@@ -7,7 +7,10 @@ const nextConfig: NextConfig = {
     return [{ source: "/", destination: "/home", permanent: true }];
   },
   images: {
-    domains: ["lh5.googleusercontent.com"],
+    domains: [
+      "lh5.googleusercontent.com",
+      "jeci5zb54a7bovch.public.blob.vercel-storage.com",
+    ],
   },
   webpack(config) {
     // Add SVGR support

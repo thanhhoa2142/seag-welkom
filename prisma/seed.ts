@@ -1,4 +1,4 @@
-import { LocationTag, PrismaClient, RewardType } from "@prisma/client";
+import { LocationTag, Prisma, PrismaClient } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { hashSync } from "bcryptjs";
 
@@ -31,8 +31,10 @@ async function main() {
   // Create sample users
   const rin = await prisma.user.create({
     data: {
-      phoneNumber: "0478834236",
+      phoneNumber: "0478234236",
       username: "rinx1000",
+      email: "iamrin@seag.fun",
+      bio: "Love code, cat 🐈, but not coffee. A real developer from Vietnam 🇻🇳.",
       passwordHash: hashSync("password"),
     },
   });
@@ -206,20 +208,55 @@ async function main() {
       },
     }),
   ]);
+
+  // Add tasks for rin
+  const tasks = await prisma.task.findMany();
+  await prisma.userTask.createMany({
+    data: tasks
+      .filter(() => Math.random() > 0.5)
+      .map((task) => ({ userId: rin.id, taskId: task.id })),
+  });
+
   // Create rewards
-  await Promise.all(
-    Array.from({ length: 5 }).map(() =>
-      prisma.reward.create({
-        data: {
-          type: faker.helpers.arrayElement(Object.values(RewardType)),
-          name: faker.commerce.productName(),
-          description: faker.lorem.sentence(),
-          pointsRequired: faker.number.int({ min: 100, max: 1000 }),
-          isHidden: Math.random() > 0.7,
-        },
-      })
-    )
-  );
+  const rewards: Prisma.RewardCreateInput[] = [
+    {
+      name: "Card Holder",
+      description: "Keep your Myki card always in one place",
+      pointsRequired: 50,
+      photoUrl:
+        "https://jeci5zb54a7bovch.public.blob.vercel-storage.com/rewards/card-holder-pCsjJsJKuHIpbtgywCK2z4gzNTU99l.jpg",
+    },
+    {
+      name: "Water Bottle",
+      description: "Stay hydrated with this water bottle",
+      pointsRequired: 100,
+      photoUrl:
+        "https://jeci5zb54a7bovch.public.blob.vercel-storage.com/rewards/bottle-vpoMuJSGQIWwIg2MKbKxktnX8BeWAi.jpg",
+    },
+    {
+      name: "Sturdy Umbrella",
+      description: "Stay dry with this sturdy umbrella",
+      pointsRequired: 150,
+      photoUrl:
+        "https://jeci5zb54a7bovch.public.blob.vercel-storage.com/rewards/umbrella-psNkFQECf1Cig63gMGYNbVbXZ5TLyL.jpg",
+    },
+    {
+      name: "T-shirt with your badges",
+      description: "Show off your badges with this t-shirt",
+      pointsRequired: 200,
+      photoUrl:
+        "https://jeci5zb54a7bovch.public.blob.vercel-storage.com/rewards/t-shirt-lyk2XPhnR7yzoBDTuRIWhA8skGgFFo.webp",
+    },
+    {
+      name: "Keychron K2 Keyboard",
+      description:
+        "Upgrade your typing experience with this mechanical keyboard",
+      pointsRequired: 500,
+      photoUrl:
+        "https://jeci5zb54a7bovch.public.blob.vercel-storage.com/rewards/keychron-v2-d7T4ZxsCLiNBMZultg7HMRq0MKBS4u.webp",
+    },
+  ];
+  await prisma.reward.createMany({ data: rewards });
 
   // Create some connections between users
   await Promise.all(
@@ -256,8 +293,6 @@ async function main() {
       })
     )
   );
-
-  console.log("Seed data created successfully!");
 }
 
 main()

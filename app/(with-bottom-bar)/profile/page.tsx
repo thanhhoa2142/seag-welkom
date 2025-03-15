@@ -1,101 +1,147 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Edit2, Star } from "lucide-react";
-import { mockStoreItems, mockUser, StoreItem, User } from "@/lib/constants";
+import { Settings2, Star } from "lucide-react";
+import { categoryTitleMap, pointToGetBadge } from "@/lib/constants";
+import EmojiAvatar from "@/components/ui2/emoji-avatar";
+import { prisma, thisUser } from "@/lib/db";
+import { LocationTag } from "@prisma/client";
+import { PageContainer } from "@/components/ui2/page-container";
 
-export default function ProfilePage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [storeItems, setStoreItems] = useState<StoreItem[]>([]);
-
-  useEffect(() => {
-    setUser(mockUser);
-    setStoreItems(mockStoreItems);
-  }, []);
-
+export default async function ProfilePage() {
+  const user = await thisUser;
   if (!user) return <div>Not found</div>;
 
+  const [rewards, moreUserInfo] = await Promise.all([
+    prisma.reward.findMany({
+      orderBy: { pointsRequired: "asc" },
+      include: { _count: { select: { userRewards: true } } },
+    }),
+    prisma.user.findFirst({
+      where: { username: "rinx1000" },
+      include: {
+        // To calculate the points for each tag
+        tasks: {
+          select: {
+            task: {
+              select: { points: true, location: { select: { tags: true } } },
+            },
+          },
+        },
+        rewards: {
+          select: { rewardId: true, isRedeemed: true, redeemedAt: true },
+        },
+      },
+    }),
+  ]);
+  const { tasks, rewards: userRewards } = moreUserInfo!;
+  let totalPoints = 0;
+  const pointOfEachTag = tasks.reduce((acc, { task }) => {
+    task.location.tags.forEach((tag) => {
+      acc[tag] = (acc[tag] || 0) + task.points;
+      totalPoints += task.points;
+    });
+    return acc;
+  }, {} as Record<LocationTag, number>);
+  const currentPoint = userRewards.reduce(
+    (acc, { isRedeemed, rewardId }) =>
+      acc -
+      (isRedeemed ? rewards.find((r) => r.id === rewardId)!.pointsRequired : 0),
+    totalPoints
+  );
+
   return (
-    <div className="w-full flex flex-col items-center p-4 space-y-6">
+    <PageContainer className="w-full flex flex-col items-center p-4 space-y-6">
       {/* User Profile Section */}
-      <Card className="w-full p-4">
+      <div className="w-full">
         <div className="flex items-center space-x-4">
-          <Image
-            src={user.avatarUrl}
-            alt={user.name}
-            width={80}
-            height={80}
-            className="rounded-full"
-          />
-          <div className="flex-1">
-            <h2 className="text-xl font-bold">{user.name}</h2>
-            <p className="text-gray-600 text-sm">{user.email}</p>
-            <div className="flex space-x-2 mt-1">
-              {user.badges.map((badge, index) => (
-                <Badge key={index} className={`${badge.color} text-xs`}>
-                  {badge.icon} {badge.label}
-                </Badge>
-              ))}
-            </div>
+          <EmojiAvatar name={user.username} />
+          <div>
+            <strong>{user.username}</strong>
+            {user.bio && (
+              <p className="text-gray-600 text-center text-sm -mt-0.5">
+                {user.bio}
+              </p>
+            )}
           </div>
-          <Button variant="ghost" size="sm" className="ml-auto">
-            <Edit2 className="h-4 w-4" />
+          <Button
+            size={"sm"}
+            variant={"secondary"}
+            className="rounded-full ml-auto bg-emerald-800/10 hover:bg-emerald-800/20 text-xs px-3"
+          >
+            Edit <Settings2 />
           </Button>
         </div>
-      </Card>
 
-      {/* About Me Section */}
-      <Card className="w-full p-4">
-        <h3 className="text-lg font-semibold mb-2">About me</h3>
-        <p className="text-gray-700 text-s">{user.aboutMe}</p>
-      </Card>
+        <ul className="flex space-x-2 mt-4">
+          {Object.entries(categoryTitleMap).map(([tag, title]) =>
+            pointOfEachTag[tag as LocationTag] > pointToGetBadge ? (
+              <li
+                key={tag}
+                className="flex flex-col items-center bg-gray-100 text-gray-600 text-xs p-2 rounded-lg min-w-20 font-medium"
+              >
+                <Image
+                  src={`/badges/${tag}.svg`}
+                  alt={title}
+                  width={32}
+                  height={32}
+                />
+                {title.slice(2)}
+              </li>
+            ) : null
+          )}
+        </ul>
+      </div>
+
+      <section className="w-full">
+        <h2 className="text-lg font-semibold">About me</h2>
+        <p className="text-gray-600 text-sm">
+          {user.bio ??
+            "Fill up your bio to let others know how cool are you 😎"}
+        </p>
+      </section>
 
       {/* Store Section */}
-      <Card className="w-full p-4">
+      <div className="w-full">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Store</h3>
+          <h2 className="text-lg font-semibold">Store</h2>
           <p className="text-sm text-gray-600">
-            My Point: <Star className="inline h-4 w-4 text-yellow-500" />{" "}
-            {user.points}
+            My Point: <Star className="inline size-5 text-yellow-500" />{" "}
+            {currentPoint}
           </p>
           <a href="#" className="text-sm text-gray-500">
             See All
           </a>
         </div>
-        <div className="grid grid-cols-4 gap-4">
-          {storeItems.map((item) => (
-            <Card key={item.id} className="p-2">
+        <div className="grid grid-cols-3 gap-4">
+          {rewards.map((reward) => (
+            <div key={reward.id} className="p-2">
               <div className="mb-1">
                 <Image
-                  src={item.imageUrl}
-                  alt={item.name}
+                  src={reward.photoUrl}
+                  alt={reward.name}
                   width={300}
                   height={300}
                   objectFit="cover"
                   className="rounded-md"
                 />
               </div>
-              <h4 className="text-md font-medium truncate text-center">
-                {item.name}
+              <h4 className="text-sm font-medium truncate text-center">
+                {reward.name}
               </h4>
               <p className="text-s text-center text-gray-500">
                 <Star className="inline h-3 w-3 text-yellow-500" />
-                {item.price}
+                {reward.pointsRequired}
               </p>
               <Button variant="default" className="mt-1 w-full py-1 text-xs">
                 Exchange
               </Button>
               <p className="text-[12px] text-gray-500 mt-1 text-center">
-                {item.exchanged} Exchanged
+                {reward._count.userRewards} Exchanged
               </p>
-            </Card>
+            </div>
           ))}
         </div>
-      </Card>
-    </div>
+      </div>
+    </PageContainer>
   );
 }
