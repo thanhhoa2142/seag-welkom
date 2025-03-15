@@ -5,6 +5,7 @@ import { MapOverview } from '../../components/map/map-overview';
 import { FriendActivity } from '../../friends/components/friend-activity';
 import { PageHeader } from '../../../components/ui2/header';
 import TipsOfTheDay from './components/tips-of-the-day';
+import Chatbot from './components/chatbot-question';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -24,6 +25,7 @@ export default function DashboardPage() {
         <FriendActivity />
         <TipsOfTheDay />
       </div>
+      <Chatbot />
     </>
   );
 }
