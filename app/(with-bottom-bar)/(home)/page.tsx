@@ -14,10 +14,7 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   return (
     <>
-      <PageHeader
-        heading='Welcome back!'
-        text="Here's what's happening around you"
-      />
+      <PageHeader heading='' text="Here's what's happening around you" />
       <div className='space-y-4'>
         <MapOverview />
         <ChallengeList />

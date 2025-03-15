@@ -76,7 +76,6 @@ export function ChallengeDetail() {
       </div>
 
       <div className='p-4 space-y-6'>
-        {/* Header */}
         <div className='space-y-1'>
           <div className='flex justify-between items-start'>
             <h1 className='text-2xl font-bold'>{location.name}</h1>
