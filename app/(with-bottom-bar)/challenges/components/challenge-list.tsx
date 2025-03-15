@@ -24,9 +24,9 @@ export function ChallengeList() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-semibold tracking-tight">Activities</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Activities</h2>
       </div>
 
       <div className="flex overflow-auto space-x-4 mt-2">
