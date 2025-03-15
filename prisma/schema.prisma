@@ -24,17 +24,19 @@ model User {
   // Relations
   preferences UserPreference?
   hobbyTags   UserHobbyTag[]
-  tasks       Task[]
   rewards     UserReward[]
   chatbotLogs ChatbotLog[]
+  tasks       UserTask[]
 
-  // Connections (both sides)
-  connectionsInitiated Connection[] @relation("UserOne")
-  connectionsReceived  Connection[] @relation("UserTwo")
+  // Connections where user is the initiator
+  sentConnections     Connection[] @relation("UserConnections")
+  // Connections where user is the friend
+  receivedConnections Connection[] @relation("FriendConnections")
 
   // Chat connections (both sides)
   chatConnectionsInitiated ChatConnection[] @relation("ChatUserOne")
   chatConnectionsReceived  ChatConnection[] @relation("ChatUserTwo")
+  Task                     Task[]
 
   @@index([phoneNumber, username])
   @@map("users")
@@ -82,19 +84,19 @@ model UserHobbyTag {
 }
 
 model Connection {
-  id        String           @id @default(uuid())
-  userOneId String           @map("user_one_id")
-  userTwoId String           @map("user_two_id")
-  status    ConnectionStatus @default(PENDING)
-  createdAt DateTime         @default(now()) @map("created_at")
-  updatedAt DateTime         @updatedAt @map("updated_at")
+  id        String   @id @default(cuid())
+  userId    String
+  friendId  String
+  status    String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  // Relations
-  userOne User @relation("UserOne", fields: [userOneId], references: [id])
-  userTwo User @relation("UserTwo", fields: [userTwoId], references: [id])
+  user   User @relation("UserConnections", fields: [userId], references: [id])
+  friend User @relation("FriendConnections", fields: [friendId], references: [id])
 
-  @@unique([userOneId, userTwoId])
-  @@map("connections")
+  @@unique([userId, friendId])
+  @@index([userId])
+  @@index([friendId])
 }
 
 model Location {
@@ -119,22 +121,36 @@ model Location {
 }
 
 model Task {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  locationId  String    @map("location_id")
-  title       String
-  description String?   @db.Text
-  points      Int       @default(0)
-  isCompleted Boolean   @default(false) @map("is_completed")
-  completedAt DateTime? @map("completed_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id          String   @id @default(uuid())
+  locationId  String   @map("location_id")
+  description String   @db.Text
+  points      Int      @default(1)
+  photoUrl    String?  @map("photo_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user     User     @relation(fields: [userId], references: [id])
-  location Location @relation(fields: [locationId], references: [id])
+  location  Location   @relation(fields: [locationId], references: [id])
+  User      User?      @relation(fields: [userId], references: [id])
+  userId    String?
+  userTasks UserTask[]
 
   @@map("tasks")
+}
+
+model UserTask {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  taskId      String   @map("task_id")
+  completed   Boolean  @default(false)
+  completedAt DateTime @map("completed_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+  task Task @relation(fields: [taskId], references: [id])
+
+  @@unique([userId, taskId])
+  @@map("user_tasks")
 }
 
 model Reward {
@@ -235,5 +251,4 @@ enum LocationTag {
   ART
   SPORTS
   FOOD
-  SHOPPING
 }

@@ -100,14 +100,14 @@ export default function Chatbot() {
 
       {isOpen && (
         <Card
-          className={`w-80 transition-all duration-300 ${
+          className={`w-80 pt-0 rounded-t-xl overflow-hidden transition-all duration-300 ${
             isMinimized ? 'h-12' : 'h-[400px]'
           }`}
         >
           <CardHeader className='p-3 flex flex-row items-center justify-between bg-primary text-primary-foreground'>
             <div className='font-semibold flex items-center'>
               <MessageCircle className='mr-2 h-4 w-4' />
-              Doofin
+              Chatbot
             </div>
             <div className='flex space-x-2'>
               <Button

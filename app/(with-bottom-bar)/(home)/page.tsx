@@ -1,8 +1,8 @@
 /** @format */
 
-import { ChallengeList } from '../../challenges/components/challenge-list';
+import { ChallengeList } from '../challenges/components/challenge-list';
 import { MapOverview } from '../../components/map/map-overview';
-import { FriendActivity } from '../../friends/components/friend-activity';
+import { FriendActivity } from '../friends/components/friend-activity';
 import { PageHeader } from '../../../components/ui2/header';
 import TipsOfTheDay from './components/tips-of-the-day';
 

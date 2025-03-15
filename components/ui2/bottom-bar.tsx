@@ -6,9 +6,11 @@ import {
   Home,
   UserCircle,
   LucideIcon,
-  Rocket,
   MessageCircleMoreIcon,
+  Flame,
+  Handshake,
 } from "lucide-react";
+import Image from "next/image";
 
 type NavItem = {
   href: string;
@@ -25,12 +27,17 @@ const navItems: NavItem[] = [
   {
     href: "/challenges",
     label: "Challenges",
-    icon: Rocket,
+    icon: Flame,
   },
   {
     href: "/chat",
     label: "Chat",
     icon: MessageCircleMoreIcon,
+  },
+  {
+    href: "/friends",
+    label: "Friends",
+    icon: Handshake,
   },
   {
     href: "/profile",
@@ -49,15 +56,34 @@ export default function BottomBar() {
           <Link
             key={href}
             href={href}
-            className={`flex flex-col items-center ${
-              pathname === href ? "text-blue-600" : "text-gray-500"
+            className={`flex-1 flex flex-col items-center ${
+              pathname === href
+                ? "text-green-700 font-semibold"
+                : "text-gray-500"
             }`}
           >
-            <Icon
-              size={24}
-              className={pathname === href ? "fill-current/20" : ""}
-            />
-            <span className="text-xs mt-1">{label}</span>
+            {label === "Chat" ? (
+              <>
+                <Image
+                  src={"/chatbot.png"}
+                  width={24}
+                  height={24}
+                  alt="Chatbot"
+                  className="-mt-0.5"
+                />
+                <span className="text-xs text-blue-700 font-medium">
+                  {label}
+                </span>
+              </>
+            ) : (
+              <>
+                <Icon
+                  size={20}
+                  className={pathname === href ? "fill-current/20" : ""}
+                />
+                <span className="text-xs mt-0.5">{label}</span>
+              </>
+            )}
           </Link>
         ))}
       </nav>
