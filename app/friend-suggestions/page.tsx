@@ -1,4 +1,5 @@
-import { FriendSuggestions } from "../friends/components/friend-suggestions";
+import { FriendSuggestions } from "../(with-bottom-bar)/friends/components/friend-suggestions";
+import { PageContainer } from "@/components/ui2/page-container";
 
 export const metadata: Metadata = {
   title: "Friend Suggestions",
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function FriendSuggestionsPage() {
   return (
-    <div className="container relative min-h-screen py-8">
+    <PageContainer className="container relative min-h-screen py-8">
       <div className="mx-auto flex w-full flex-col space-y-6">
         <div className="flex flex-col space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight">
@@ -19,6 +20,6 @@ export default function FriendSuggestionsPage() {
         </div>
         <FriendSuggestions />
       </div>
-    </div>
+    </PageContainer>
   );
 }

@@ -1,6 +1,6 @@
 import { LocationTag, PrismaClient, RewardType } from "@prisma/client";
 import { faker } from "@faker-js/faker";
-import { hash } from "crypto";
+import { hashSync } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -28,13 +28,20 @@ async function main() {
   );
 
   // Create sample users
+  const rin = await prisma.user.create({
+    data: {
+      phoneNumber: "0478834236",
+      username: "rinx1000",
+      passwordHash: hashSync("password"),
+    },
+  });
   const users = await Promise.all(
     Array.from({ length: 5 }).map(async () => {
       const user = await prisma.user.create({
         data: {
           phoneNumber: faker.phone.number(),
-          username: faker.internet.userName(),
-          passwordHash: hash("sha256", "password"),
+          username: faker.internet.displayName(),
+          passwordHash: hashSync("password"),
         },
       });
 
@@ -62,6 +69,14 @@ async function main() {
       return user;
     })
   );
+  // add friends for rin
+  await prisma.connection.createMany({
+    data: users.map((user) => ({
+      userId: rin.id,
+      friendId: user.id,
+      status: "ACCEPTED",
+    })),
+  });
 
   // Create locations
   const locations = await Promise.all([
@@ -77,6 +92,17 @@ async function main() {
         photoUrl:
           "https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no",
         tags: [LocationTag.HISTORICAL, LocationTag.CULTURAL, LocationTag.ART],
+        tasks: {
+          createMany: {
+            data: [
+              "Visit the Lego Model of State Lib",
+              "Attend free exhibitions",
+              "Visit the famous Dome reading room",
+              "Register for library account",
+              "Visit at least 3 readings rooms",
+            ].map((task) => ({ description: task })),
+          },
+        },
       },
     }),
     //-37.829918615807955, 144.9812192312084 - Shrine of Remembrance
@@ -91,6 +117,18 @@ async function main() {
         photoUrl:
           "https://lh5.googleusercontent.com/p/AF1QipM8htf0oBRNqgvM83Msp7WUr3TjFIgE6SA8ed2S=w408-h306-k-no",
         tags: [LocationTag.HISTORICAL, LocationTag.CULTURAL],
+        tasks: {
+          createMany: {
+            data: [
+              "Take a picture inside the Galleries of Remembrance",
+              "Find the The WWII gallery",
+              "Visit the Crypt",
+              "Enjoy the Balcony Views",
+              "Stroll Through the Gardens",
+              "Visit the Visitor Centre",
+            ].map((task) => ({ description: task })),
+          },
+        },
       },
     }),
     // -37.830372314962794, 144.97344262483904
@@ -105,6 +143,18 @@ async function main() {
         photoUrl:
           "https://lh5.googleusercontent.com/p/AF1QipNr16xQjl9PqqLfiXee9kHtLv7xu-kvjiBPdeWw=w408-h306-k-no",
         tags: [LocationTag.NATURE, LocationTag.HISTORICAL],
+        tasks: {
+          createMany: {
+            data: [
+              "Stroll through themed gardens or bring along a picnic in one of the many green spaces.",
+              "Visit Visitor Centre",
+              "Take photo of the amazing landscape",
+              "Find at least 20 unique plants",
+              "Visit Tropical Glass House",
+              "Find a quiet spot to read, meditate, or simply enjoy the natural beauty.",
+            ].map((task) => ({ description: task })),
+          },
+        },
       },
     }),
     // -37.81719642762704, 144.9708156498251
@@ -119,6 +169,15 @@ async function main() {
         photoUrl:
           "https://lh5.googleusercontent.com/p/AF1QipOagdxjFkB5jmhQ08F3BeKzPkZeXf7wANo_IL9H=w408-h306-k-no",
         tags: [LocationTag.CULTURAL, LocationTag.HISTORICAL],
+        tasks: {
+          createMany: {
+            data: [
+              "Watch the people going pass by ",
+              "Grab a coffee or meal from nearby cafés, then relax on the steps and enjoy the vibe.",
+              "Find Community Event or Watch sport (If there are any)",
+            ].map((task) => ({ description: task })),
+          },
+        },
       },
     }),
     // -37.821891941272625, 144.9698528737019 NGV
@@ -133,6 +192,16 @@ async function main() {
         photoUrl:
           "https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no",
         tags: [LocationTag.CULTURAL, LocationTag.HISTORICAL, LocationTag.ART],
+        tasks: {
+          createMany: {
+            data: [
+              "Find a painting that makes you laugh or smile.",
+              "Spot an artwork that features an animal.",
+              "Engage with an interactive exhibit or use the NGV’s digital resources.",
+              "Take the picture next to the water fountain.",
+            ].map((task) => ({ description: task })),
+          },
+        },
       },
     }),
   ]);
@@ -151,25 +220,6 @@ async function main() {
     )
   );
 
-  // Create tasks for users at locations
-  await Promise.all(
-    users.flatMap((user) =>
-      locations.map((location) =>
-        prisma.task.create({
-          data: {
-            userId: user.id,
-            locationId: location.id,
-            title: faker.lorem.sentence(),
-            description: faker.lorem.paragraph(),
-            points: faker.number.int({ min: 10, max: 100 }),
-            isCompleted: Math.random() > 0.7,
-            completedAt: Math.random() > 0.7 ? faker.date.past() : null,
-          },
-        })
-      )
-    )
-  );
-
   // Create some connections between users
   await Promise.all(
     users.flatMap((user1) =>
@@ -178,8 +228,8 @@ async function main() {
         .map((user2) =>
           prisma.connection.create({
             data: {
-              userOneId: user1.id,
-              userTwoId: user2.id,
+              userId: user1.id,
+              friendId: user2.id,
               status: faker.helpers.arrayElement([
                 "PENDING",
                 "ACCEPTED",
