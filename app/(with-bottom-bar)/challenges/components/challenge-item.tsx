@@ -1,19 +1,20 @@
-import { getPopularLocations } from "@/app/actions/challenges";
-import { Prisma } from "@prisma/client";
-import Link from "next/link";
+import { GetLocationByIdReturnType } from "@/app/actions/challenges";
 import Image from "next/image";
 import { Star } from "lucide-react";
 
 export default function ChallengeItem({
   location,
+  className,
 }: {
-  location: Prisma.PromiseReturnType<typeof getPopularLocations>[number];
+  location: NonNullable<GetLocationByIdReturnType>;
+  className?: string;
 }) {
   return (
-    <Link
-      href={`/challenges/${location.id}`}
-      key={location.id}
-      className="cursor-pointer rounded-lg bg-accent hover:bg-gray-100 pt-0 overflow-hidden"
+    <div
+      className={cn(
+        "block cursor-pointer rounded-lg bg-emerald-700/10 hover:bg-gray-100 pt-0 overflow-hidden",
+        className
+      )}
     >
       <Image
         src={location.photoUrl || ""}
@@ -22,7 +23,7 @@ export default function ChallengeItem({
         height={200}
         className="w-full h-32 object-cover"
       />
-      <div className="pt-1.5 pb-4 px-2">
+      <div className="pt-1.5 pb-4 px-3">
         <header className="flex justify-between items-center">
           <h3 className="font-semibold">{location.name}</h3>
           <div className="flex items-center space-x-1">
@@ -33,13 +34,15 @@ export default function ChallengeItem({
                 stroke="none"
               />
             </span>
-            <span>{location.tasks.reduce((acc, t) => acc + t.points, 0)}</span>
+            <strong className="text-gray-800">
+              {location.tasks.reduce((acc, t) => acc + t.points, 0)}
+            </strong>
           </div>
         </header>
         <p className="text-sm text-muted-foreground line-clamp-2">
           {location.description}
         </p>
       </div>
-    </Link>
+    </div>
   );
 }

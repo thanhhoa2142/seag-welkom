@@ -4,10 +4,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Example queries to test the database
-  const locations = await prisma.user.findMany({
-    select: { username: true, password: true },
-  });
-  console.log(locations);
+  const completedTasks = await prisma.userTask.findMany();
+  console.log(completedTasks);
 }
 
 main()

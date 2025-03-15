@@ -6,14 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LocationTag } from "@prisma/client";
 import ChallengeItem from "./challenge-item";
+import Link from "next/link";
 
 const categoryTitleMap: Record<LocationTag, string> = {
   HISTORICAL: "🏛️ Historian",
-  FOOD: "🥑 Foodie Hunt",
   ART: "🎨 Artist",
   CULTURAL: "🥮 Cultural enthusiast",
   NATURE: "🍀 Nature Lover",
-  SPORTS: "⚽ Sports Fan",
 };
 
 export function ChallengeList() {
@@ -62,7 +61,9 @@ export function ChallengeList() {
               selectedCategory ? location.tags.includes(selectedCategory) : true
             )
             .map((location) => (
-              <ChallengeItem key={location.id} location={location} />
+              <Link key={location.id} href={`/challenges/${location.id}`}>
+                <ChallengeItem key={location.id} location={location} />
+              </Link>
             ))
         )}
       </div>

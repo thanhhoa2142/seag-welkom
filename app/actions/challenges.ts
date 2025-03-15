@@ -29,7 +29,6 @@ export async function getNearbyLocations(
         tasks: {
           select: { id: true, description: true },
         },
-        hiddenReward: true,
       },
     });
 
@@ -47,7 +46,6 @@ export async function getPopularLocations() {
       tasks: {
         take: 3,
         orderBy: { createdAt: "desc" },
-        select: { id: true, description: true, points: true },
       },
     },
     orderBy: {
@@ -65,7 +63,7 @@ export type GetLocationByIdReturnType = Prisma.PromiseReturnType<
 export async function getLocationById(id: string) {
   const location = await prisma.location.findUnique({
     where: { id },
-    include: { tasks: true, hiddenReward: true },
+    include: { tasks: true },
   });
   return location;
 }
