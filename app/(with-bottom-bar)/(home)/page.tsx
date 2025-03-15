@@ -25,7 +25,7 @@ export default function DashboardPage() {
         <FriendActivity />
         <TipsOfTheDay />
       </div>
-      <Chatbot />
+      {/* <Chatbot /> */}
     </>
   );
 }

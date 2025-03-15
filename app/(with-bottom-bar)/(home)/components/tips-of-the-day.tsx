@@ -53,7 +53,7 @@ export default function TipsOfTheDay() {
     <>
       {currentTip && (
         <Card>
-          <CardHeader className='pb-2'>
+          <CardHeader>
             <div className='flex items-center justify-between'>
               <CardTitle className='text-lg font-medium flex items-center'>
                 <Lightbulb className='mr-2 h-4 w-4' />
