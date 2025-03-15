@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { ChangeEventHandler, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GetLocationByIdReturnType } from "@/app/actions/challenges";
 import { getUserTasks, updateTaskStatus } from "@/app/actions/tasks";
 import { PageContainer } from "@/components/ui2/page-container";
 import { CheckCircle2Icon } from "lucide-react";
+import Resizer from "react-image-file-resizer";
+import Image from "next/image";
 
 export function ChallengeDetail({
   location,
@@ -17,19 +19,50 @@ export function ChallengeDetail({
     queryKey: ["completedTasks"],
     queryFn: () => getUserTasks(),
   });
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const combinedTasks = useMemo(() => {
-    return tasks.map((task) => ({
-      ...task,
-      isCompleted: !!completedTasks?.find((t) => t.taskId === task.id),
-    }));
+    return tasks.map((task) => {
+      const userTask = completedTasks?.find((t) => t.taskId === task.id);
+      return { ...task, userTask, isCompleted: !!userTask };
+    });
   }, [completedTasks]);
+
+  const handleCapture: ChangeEventHandler<HTMLInputElement> = async ({
+    target,
+  }) => {
+    if (target.files) {
+      if (target.files.length !== 0) {
+        const file = target.files[0];
+        const task = combinedTasks.find((t) => t.photoUrlRequired);
+        if (!task) return;
+
+        const resizedFile = await new Promise((resolve) => {
+          Resizer.imageFileResizer(
+            file,
+            300,
+            300,
+            "JPEG",
+            100,
+            0,
+            resolve,
+            "file"
+          );
+        });
+        handleTaskToggle(task.id, !task.isCompleted, resizedFile);
+      }
+    }
+  };
 
   const progress =
     combinedTasks.filter((task) => task.isCompleted).length / tasks.length;
 
-  const handleTaskToggle = async (taskId: string, isCompleted: boolean) => {
-    await updateTaskStatus({ id: taskId, isCompleted });
+  const handleTaskToggle = async (
+    taskId: string,
+    isCompleted: boolean,
+    photoDataUrl?: Parameters<typeof updateTaskStatus>["0"]["photoDataUrl"]
+  ) => {
+    await updateTaskStatus({ id: taskId, photoDataUrl });
     refetch();
     toast.success(isCompleted ? "Task completed" : "Task uncompleted");
   };
@@ -45,6 +78,14 @@ export function ChallengeDetail({
         </div>
       </div>
       <PageContainer className="pt-2">
+        <input
+          ref={imageInputRef}
+          accept="image/*"
+          type="file"
+          capture="environment"
+          onChange={handleCapture}
+          className="hidden"
+        />
         <div className="w-full">
           <div className="space-y-2">
             <h2 className="text-lg font-semibold">Tasks</h2>
@@ -54,9 +95,12 @@ export function ChallengeDetail({
                 .map((task) => (
                   <div key={task.id} className="flex items-center space-x-2">
                     <div
-                      onClick={() =>
-                        handleTaskToggle(task.id, !task.isCompleted)
-                      }
+                      onClick={async () => {
+                        if (task.photoUrlRequired) {
+                          // trigger take photo
+                          imageInputRef.current?.click();
+                        } else handleTaskToggle(task.id, !task.isCompleted);
+                      }}
                       className="h-5 w-5 rounded-full border border-gray-400 flex-shrink-0 cursor-pointer"
                     />
                     <p className="text-sm">{task.description}</p>
@@ -80,7 +124,22 @@ export function ChallengeDetail({
                       }
                     >
                       <CheckCircle2Icon className="size-7 -ml-1 rounded-full flex-shrink-0 fill-emerald-700 text-white font-bold" />
-                      <p className="text-sm">{task.description}</p>
+                      <p className="text-sm flex items-center gap-2">
+                        {task.description}
+
+                        {task.userTask?.photoUrl && (
+                          <div className="rounded-lg p-1.5 border border-dashed border-slate-200 bg-slate-100 w-fit">
+                            <div className="relative size-12 rounded overflow-hidden">
+                              <Image
+                                src={task.userTask?.photoUrl}
+                                fill
+                                alt="Task photo"
+                                className="object-cover"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </p>
                     </div>
                   ))}
               </div>

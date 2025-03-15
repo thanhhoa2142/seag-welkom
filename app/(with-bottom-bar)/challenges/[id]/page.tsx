@@ -26,7 +26,11 @@ export default async function ChallengePage({ params }: ChallengePageProps) {
 
   return (
     <div className="-mx-4 -mt-4">
-      <ChallengeItem location={location} className={"rounded-none"} />
+      <ChallengeItem
+        location={location}
+        className={"rounded-none"}
+        imageClassName="h-52"
+      />
       <ChallengeDetail location={location} />
     </div>
   );

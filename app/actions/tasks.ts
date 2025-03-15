@@ -2,35 +2,40 @@
 
 import { z } from "zod";
 import { prisma, thisUser } from "@/lib/db";
+import { put } from "@vercel/blob";
 
 const TaskUpdateSchema = z.object({
   id: z.string().uuid(),
-  isCompleted: z.boolean(),
+  photoDataUrl: z.any(),
 });
 
 export async function updateTaskStatus(data: z.infer<typeof TaskUpdateSchema>) {
   const user = await thisUser;
   if (!user) throw new Error("User not found");
   const userId = user.id;
-  const validatedData = TaskUpdateSchema.parse(data);
+  const { id, photoDataUrl } = TaskUpdateSchema.parse(data);
 
-  const task = await prisma.task.findFirst({
-    where: { id: validatedData.id },
-  });
+  let photoUrl = undefined;
+  if (photoDataUrl) {
+    const { url } = await put(`tasks/${id}/${userId}`, photoDataUrl, {
+      access: "public",
+    });
+    photoUrl = url;
+  }
 
+  const task = await prisma.task.findFirst({ where: { id } });
   if (!task) throw Error("Task not found");
 
   const completedTask = await prisma.userTask.findFirst({
-    where: { taskId: validatedData.id, userId },
+    where: { taskId: id, userId },
   });
   if (completedTask) {
     await prisma.userTask.delete({ where: { id: completedTask.id } });
   } else {
     await prisma.userTask.create({
-      data: { taskId: validatedData.id, userId },
+      data: { taskId: id, userId, photoUrl },
     });
   }
-  return validatedData;
 }
 
 export async function getUserTasks() {

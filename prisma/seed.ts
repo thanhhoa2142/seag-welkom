@@ -86,6 +86,10 @@ async function main() {
     })),
   });
 
+  const createTask = (task: string) => ({
+    description: task,
+    photoUrlRequired: task.includes("picture"),
+  });
   // Create locations
   const locations = await Promise.all([
     prisma.location.create({
@@ -102,12 +106,13 @@ async function main() {
         tasks: {
           createMany: {
             data: [
+              "Take a picture inside the Dome reading room",
+              "Visit the famous Dome reading room",
               "Visit the Lego Model of State Lib",
               "Attend free exhibitions",
-              "Visit the famous Dome reading room",
               "Register for library account",
               "Visit at least 3 readings rooms",
-            ].map((task) => ({ description: task })),
+            ].map(createTask),
           },
         },
       },
@@ -132,7 +137,7 @@ async function main() {
               "Enjoy the Balcony Views",
               "Stroll Through the Gardens",
               "Visit the Visitor Centre",
-            ].map((task) => ({ description: task })),
+            ].map(createTask),
           },
         },
       },
@@ -151,13 +156,13 @@ async function main() {
         tasks: {
           createMany: {
             data: [
+              "Take a picture of the amazing landscape",
               "Stroll through themed gardens or bring along a picnic in one of the many green spaces.",
               "Visit Visitor Centre",
-              "Take photo of the amazing landscape",
               "Find at least 20 unique plants",
               "Visit Tropical Glass House",
               "Find a quiet spot to read, meditate, or simply enjoy the natural beauty.",
-            ].map((task) => ({ description: task })),
+            ].map(createTask),
           },
         },
       },
@@ -176,10 +181,11 @@ async function main() {
         tasks: {
           createMany: {
             data: [
+              "Take the picture next to the statue.",
               "Watch the people going pass by ",
               "Grab a coffee or meal from nearby cafés, then relax on the steps and enjoy the vibe.",
               "Find Community Event or Watch sport (If there are any)",
-            ].map((task) => ({ description: task })),
+            ].map(createTask),
           },
         },
       },
@@ -198,11 +204,11 @@ async function main() {
         tasks: {
           createMany: {
             data: [
+              "Take the picture next to the water fountain.",
               "Find a painting that makes you laugh or smile.",
               "Spot an artwork that features an animal.",
               "Engage with an interactive exhibit or use the NGV’s digital resources.",
-              "Take the picture next to the water fountain.",
-            ].map((task) => ({ description: task })),
+            ].map(createTask),
           },
         },
       },

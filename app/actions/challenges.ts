@@ -43,10 +43,7 @@ export async function getPopularLocations() {
   const locations = await prisma.location.findMany({
     include: {
       _count: { select: { tasks: true } },
-      tasks: {
-        take: 3,
-        orderBy: { createdAt: "desc" },
-      },
+      tasks: { orderBy: { createdAt: "desc" } },
     },
     orderBy: {
       tasks: { _count: "desc" },

@@ -10,9 +10,9 @@
     "generate-pwa-icons": "tsx scripts/generate-pwa-icons.ts",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
-    "prisma:sync": "npm run prisma:generate && npm run prisma:push",
-    "prisma:studio": "prisma studio",
     "prisma:seed": "tsx prisma/seed.ts",
+    "prisma:sync": "npm run prisma:generate && npm run prisma:push && npm run prisma:seed",
+    "prisma:studio": "prisma studio",
     "prisma:playground": "tsx prisma/playground.ts"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.1",
     "@tanstack/react-query": "^5.68.0",
+    "@vercel/blob": "^0.27.3",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -42,6 +43,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "react-image-file-resizer": "^0.4.8",
     "sonner": "^2.0.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",

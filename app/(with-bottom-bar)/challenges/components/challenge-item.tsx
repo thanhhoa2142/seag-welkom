@@ -5,9 +5,11 @@ import { Star } from "lucide-react";
 export default function ChallengeItem({
   location,
   className,
+  imageClassName,
 }: {
   location: NonNullable<GetLocationByIdReturnType>;
   className?: string;
+  imageClassName?: string;
 }) {
   return (
     <div
@@ -21,7 +23,7 @@ export default function ChallengeItem({
         alt={location.name}
         width={400}
         height={200}
-        className="w-full h-32 object-cover"
+        className={cn("w-full h-32 object-cover", imageClassName)}
       />
       <div className="pt-1.5 pb-4 px-3">
         <header className="flex justify-between items-center">

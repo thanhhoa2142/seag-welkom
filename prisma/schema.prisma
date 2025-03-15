@@ -122,13 +122,13 @@ model Location {
 }
 
 model Task {
-  id          String   @id @default(uuid())
-  locationId  String   @map("location_id")
-  description String   @db.Text
-  points      Int      @default(10)
-  photoUrl    String?  @map("photo_url")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id               String   @id @default(uuid())
+  locationId       String   @map("location_id")
+  description      String   @db.Text
+  points           Int      @default(10)
+  photoUrlRequired Boolean  @default(false) @map("photo_url_required")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
 
   // Relations
   location  Location   @relation(fields: [locationId], references: [id])
@@ -141,6 +141,7 @@ model UserTask {
   id          String   @id @default(uuid())
   userId      String   @map("user_id")
   taskId      String   @map("task_id")
+  photoUrl    String?  @map("photo_url")
   completedAt DateTime @default(now()) @map("completed_at")
 
   // Relations
@@ -222,7 +223,7 @@ model ChatbotLog {
   timestamp    DateTime @default(now())
 
   // Relations
-user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@map("chatbot_logs")
 }
