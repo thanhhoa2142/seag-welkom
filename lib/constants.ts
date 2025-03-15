@@ -107,4 +107,20 @@ export const mockStoreItems: StoreItem = [
     price: 400,
     exchanged: 128,
   },
+  {
+    id: '3',
+    name: 'Tshirt',
+    imageUrl:
+      'https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no', // Placeholder image URL
+    price: 400,
+    exchanged: 128,
+  },
+  {
+    id: '4',
+    name: 'Stickers',
+    imageUrl:
+      'https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no', // Placeholder image URL
+    price: 400,
+    exchanged: 128,
+  },
 ];
