@@ -249,6 +249,4 @@ enum LocationTag {
   HISTORICAL
   CULTURAL
   ART
-  SPORTS
-  FOOD
 }

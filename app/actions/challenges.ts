@@ -41,29 +41,22 @@ export async function getNearbyLocations(
 }
 
 export async function getPopularLocations() {
-  try {
-    const locations = await prisma.location.findMany({
-      include: {
-        _count: {
-          select: { tasks: true },
-        },
-        tasks: {
-          take: 3,
-          orderBy: { createdAt: "desc" },
-          select: { id: true, description: true },
-        },
+  const locations = await prisma.location.findMany({
+    include: {
+      _count: { select: { tasks: true } },
+      tasks: {
+        take: 3,
+        orderBy: { createdAt: "desc" },
+        select: { id: true, description: true, points: true },
       },
-      orderBy: {
-        tasks: { _count: "desc" },
-      },
-      take: 10,
-    });
+    },
+    orderBy: {
+      tasks: { _count: "desc" },
+    },
+    take: 10,
+  });
 
-    return { success: true, data: locations };
-  } catch (error) {
-    console.error("Failed to fetch popular locations:", error);
-    return { success: false, error: "Failed to fetch popular locations" };
-  }
+  return locations;
 }
 
 export type GetLocationByIdReturnType = Prisma.PromiseReturnType<
