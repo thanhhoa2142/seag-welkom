@@ -59,14 +59,52 @@ export const universityInMelbourne = [
   },
 ];
 
-const mockLocation = {
-  id: 'loc1',
-  name: 'Sample Challenge',
-  description: 'This is a sample challenge to test the UI.',
-  tags: ['fun', 'easy', 'test'],
-  tasks: [
-    { id: 'task1', description: 'Task 1', isCompleted: false },
-    { id: 'task2', description: 'Task 2', isCompleted: true },
-    { id: 'task3', description: 'Task 3', isCompleted: false },
+export interface User {
+  name: string;
+  email: string;
+  avatarUrl: string;
+  aboutMe: string;
+  badges: { label: string; color: string; icon: string }[];
+  points: number;
+}
+
+export interface StoreItem {
+  id: string;
+  name: string;
+  imageUrl: string;
+  price: number;
+  exchanged: number;
+}
+
+export const mockUser: User = {
+  name: 'Vatana Chhorn',
+  email: 'Onlyvatana23@gmail.com',
+  avatarUrl:
+    'https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no',
+  aboutMe:
+    "Hello, My name is Vatana Chhorn. I'm a UI/UX designer passionate about creating user-friendly interfaces. I believe that great design can transform user experiences and drive business success.",
+  badges: [
+    { label: 'Historical Expert', color: 'bg-yellow-100', icon: '🏛️' },
+    { label: 'Culture Guru', color: 'bg-green-100', icon: '👤' },
   ],
+  points: 300,
 };
+
+export const mockStoreItems: StoreItem = [
+  {
+    id: '1',
+    name: 'Lamborghini Urus',
+    imageUrl:
+      'https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no', // Placeholder image URL
+    price: 400,
+    exchanged: 128,
+  },
+  {
+    id: '2',
+    name: 'Luxury Armchair',
+    imageUrl:
+      'https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no', // Placeholder image URL
+    price: 400,
+    exchanged: 128,
+  },
+];
