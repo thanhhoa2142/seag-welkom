@@ -28,3 +28,33 @@ export function formatNumber(
     useGrouping,
   });
 }
+
+const animalEmojis = [
+  "🐶",
+  "🐱",
+  "🐭",
+  "🐹",
+  "🐰",
+  "🦊",
+  "🐻",
+  "🐼",
+  "🐨",
+  "🐯",
+  "🦁",
+  "🐮",
+  "🐷",
+  "🐸",
+  "🐵",
+  "🐔",
+  "🐧",
+  "🐦",
+  "🐤",
+];
+
+export const getAvatarAttributes = (name: string) => {
+  const index = name.length % animalEmojis.length;
+  return {
+    emoji: animalEmojis[index],
+    color: `hsl(${name.length * 15}, 50%, 60%)`,
+  };
+};
