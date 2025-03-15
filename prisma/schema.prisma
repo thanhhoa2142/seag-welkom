@@ -1,0 +1,239 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  phoneNumber  String   @unique @map("phone_number")
+  username     String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  preferences UserPreference?
+  hobbyTags   UserHobbyTag[]
+  tasks       Task[]
+  rewards     UserReward[]
+  chatbotLogs ChatbotLog[]
+
+  // Connections (both sides)
+  connectionsInitiated Connection[] @relation("UserOne")
+  connectionsReceived  Connection[] @relation("UserTwo")
+
+  // Chat connections (both sides)
+  chatConnectionsInitiated ChatConnection[] @relation("ChatUserOne")
+  chatConnectionsReceived  ChatConnection[] @relation("ChatUserTwo")
+
+  @@index([phoneNumber, username])
+  @@map("users")
+}
+
+model UserPreference {
+  id              String   @id @default(uuid())
+  userId          String   @unique @map("user_id")
+  nationality     String?
+  university      String?
+  groupPreference String?  @map("group_preference")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+model HobbyTag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  users UserHobbyTag[]
+
+  @@map("hobby_tags")
+}
+
+model UserHobbyTag {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  HobbyTag   HobbyTag? @relation(fields: [hobbyTagId], references: [id])
+  hobbyTagId String?
+
+  @@unique([userId, hobbyTagId])
+  @@map("user_hobby_tags")
+}
+
+model Connection {
+  id        String           @id @default(uuid())
+  userOneId String           @map("user_one_id")
+  userTwoId String           @map("user_two_id")
+  status    ConnectionStatus @default(PENDING)
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  // Relations
+  userOne User @relation("UserOne", fields: [userOneId], references: [id])
+  userTwo User @relation("UserTwo", fields: [userTwoId], references: [id])
+
+  @@unique([userOneId, userTwoId])
+  @@map("connections")
+}
+
+model Location {
+  id                String        @id @default(uuid())
+  name              String
+  description       String?       @db.Text
+  latitude          Float
+  longitude         Float
+  hasArHiddenReward Boolean       @default(false) @map("has_ar_hidden_reward")
+  hiddenRewardId    String?       @map("hidden_reward_id")
+  photoUrl          String?       @map("photo_url")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  tags              LocationTag[]
+
+  // Relations
+  tasks           Task[]
+  recommendations WeeklyRecommendation[]
+  hiddenReward    Reward?                @relation(fields: [hiddenRewardId], references: [id])
+
+  @@map("locations")
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  locationId  String    @map("location_id")
+  title       String
+  description String?   @db.Text
+  points      Int       @default(0)
+  isCompleted Boolean   @default(false) @map("is_completed")
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id])
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@map("tasks")
+}
+
+model Reward {
+  id             String     @id @default(uuid())
+  type           RewardType
+  name           String
+  description    String?    @db.Text
+  pointsRequired Int        @map("points_required")
+  isHidden       Boolean    @default(false) @map("is_hidden")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  userRewards UserReward[]
+  locations   Location[] // For AR hidden rewards
+
+  @@map("rewards")
+}
+
+model UserReward {
+  id         String    @id @default(uuid())
+  userId     String    @map("user_id")
+  rewardId   String    @map("reward_id")
+  earnedAt   DateTime  @default(now()) @map("earned_at")
+  isRedeemed Boolean   @default(false) @map("is_redeemed")
+  redeemedAt DateTime? @map("redeemed_at")
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id])
+  reward Reward @relation(fields: [rewardId], references: [id])
+
+  @@unique([userId, rewardId])
+  @@map("user_rewards")
+}
+
+model WeeklyRecommendation {
+  id          String   @id @default(uuid())
+  title       String
+  description String?  @db.Text
+  locationId  String   @map("location_id")
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  location Location @relation(fields: [locationId], references: [id])
+
+  @@map("weekly_recommendations")
+}
+
+model ChatConnection {
+  id         String   @id @default(uuid())
+  userOneId  String   @map("user_one_id")
+  userTwoId  String   @map("user_two_id")
+  providerId String   @map("provider_id") // For external chat provider reference
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  userOne User @relation("ChatUserOne", fields: [userOneId], references: [id])
+  userTwo User @relation("ChatUserTwo", fields: [userTwoId], references: [id])
+
+  @@unique([userOneId, userTwoId])
+  @@map("chat_connections")
+}
+
+model ChatbotLog {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  messageText  String   @map("message_text") @db.Text
+  responseText String   @map("response_text") @db.Text
+  timestamp    DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("chatbot_logs")
+}
+
+enum ConnectionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum RewardType {
+  BADGE
+  PHYSICAL_SWAG
+  HIDDEN_TREASURE
+  ACHIEVEMENT
+}
+
+enum LocationTag {
+  NATURE
+  HISTORICAL
+  CULTURAL
+  ART
+  SPORTS
+  FOOD
+  SHOPPING
+}

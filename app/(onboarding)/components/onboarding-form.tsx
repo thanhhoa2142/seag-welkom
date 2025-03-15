@@ -1,19 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -21,127 +8,171 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { countryOptions, universityInMelbourne } from "@/lib/constants";
+import { getHobbies } from "@/app/actions/hobbies";
+import { HobbyTag } from "@prisma/client";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { FormEvent } from "react";
 
-const formSchema = z.object({
-  country: z.string().min(1, {
-    message: "Please select your country.",
-  }),
-  university: z.string().min(1, {
-    message: "Please enter your university.",
-  }),
-  groupPreference: z.string().min(1, {
-    message: "Please select your group preference.",
-  }),
-  hobbies: z.string().min(1, {
-    message: "Please enter at least one hobby.",
-  }),
-});
+interface FormData {
+  country: string;
+  university: string;
+  groupPreference: string;
+  hobbies: string[];
+}
 
 export function OnboardingForm() {
   const [isLoading, setIsLoading] = useState(false);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      country: "",
-      university: "",
-      groupPreference: "",
-      hobbies: "",
-    },
+  const [allHobbies, setAllHobbies] = useState<HobbyTag[]>([]);
+  const [formData, setFormData] = useState<FormData>({
+    country: "",
+    university: "",
+    groupPreference: "",
+    hobbies: [],
   });
+  const [errors, setErrors] = useState<Partial<FormData>>({});
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  useEffect(() => {
+    getHobbies().then(setAllHobbies);
+  }, []);
+
+  const validateForm = (): boolean => {
+    const newErrors: Partial<FormData> = {};
+
+    if (!formData.country) {
+      newErrors.country = "Please select your country.";
+    }
+    if (!formData.university) {
+      newErrors.university = "Please select your university.";
+    }
+    if (!formData.groupPreference) {
+      newErrors.groupPreference = "Please select your group preference.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
     setIsLoading(true);
-    console.log(values);
-  }
+    try {
+      // Add your form submission logic here
+      console.log(formData);
+    } catch (error) {
+      console.error("Form submission error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleHobbyToggle = (hobbyId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      hobbies: prev.hobbies.includes(hobbyId)
+        ? prev.hobbies.filter((id) => id !== hobbyId)
+        : [...prev.hobbies, hobbyId],
+    }));
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="country"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Which country are you from?</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your country" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="sg">Singapore</SelectItem>
-                  <SelectItem value="my">Malaysia</SelectItem>
-                  <SelectItem value="id">Indonesia</SelectItem>
-                  <SelectItem value="th">Thailand</SelectItem>
-                  <SelectItem value="vn">Vietnam</SelectItem>
-                  <SelectItem value="ph">Philippines</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="university"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Which university do you attend?</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your university" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="groupPreference"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>What&apos;s your group preference?</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your preference" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="same-country">Same Country</SelectItem>
-                  <SelectItem value="same-university">
-                    Same University
-                  </SelectItem>
-                  <SelectItem value="mixed">Mixed Group</SelectItem>
-                  <SelectItem value="no-preference">No Preference</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="hobbies"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>What are your hobbies?</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter your hobbies (comma-separated)"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Saving..." : "Continue"}
-        </Button>
-      </form>
-    </Form>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="country">Which country are you from?</Label>
+        <Select
+          value={formData.country}
+          onValueChange={(value) =>
+            setFormData((prev) => ({ ...prev, country: value }))
+          }
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select your country" />
+          </SelectTrigger>
+          <SelectContent>
+            {countryOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.country && (
+          <p className="text-sm text-destructive">{errors.country}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="university">Which university do you attend?</Label>
+        <Select
+          value={formData.university}
+          onValueChange={(value) =>
+            setFormData((prev) => ({ ...prev, university: value }))
+          }
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select your university" />
+          </SelectTrigger>
+          <SelectContent>
+            {universityInMelbourne.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.university && (
+          <p className="text-sm text-destructive">{errors.university}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="groupPreference">
+          What&apos;s your group preference?
+        </Label>
+        <Select
+          value={formData.groupPreference}
+          onValueChange={(value) =>
+            setFormData((prev) => ({ ...prev, groupPreference: value }))
+          }
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select your preference" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="same-country">Same Country</SelectItem>
+            <SelectItem value="same-university">Same University</SelectItem>
+            <SelectItem value="mixed">Mixed Group</SelectItem>
+            <SelectItem value="single">Explore by myself</SelectItem>
+            <SelectItem value="yolo">YOLO</SelectItem>
+          </SelectContent>
+        </Select>
+        {errors.groupPreference && (
+          <p className="text-sm text-destructive">{errors.groupPreference}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label>What are your hobbies?</Label>
+        <ul className="flex flex-wrap gap-4 mt-1">
+          {allHobbies.map((hobby) => (
+            <li key={hobby.id} className="flex items-center gap-2">
+              <Checkbox
+                onClick={() => handleHobbyToggle(hobby.id)}
+                value={hobby.id}
+                id={hobby.id}
+              />
+              <Label htmlFor={hobby.id}>{hobby.name}</Label>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? "Saving..." : "Continue"}
+      </Button>
+    </form>
   );
 }

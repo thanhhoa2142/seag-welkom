@@ -1,49 +1,26 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Trophy, Users } from "lucide-react";
 import Link from "next/link";
-
-interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  participants: number;
-  progress: number;
-  category: string;
-  daysLeft: number;
-}
-
-const mockChallenges: Challenge[] = [
-  {
-    id: "1",
-    title: "Campus Explorer",
-    description: "Visit 5 different locations on campus this week",
-    participants: 128,
-    progress: 60,
-    category: "Exploration",
-    daysLeft: 3,
-  },
-  {
-    id: "2",
-    title: "Social Butterfly",
-    description: "Make 3 new friends from different countries",
-    participants: 256,
-    progress: 33,
-    category: "Social",
-    daysLeft: 5,
-  },
-  // Add more mock challenges as needed
-];
+import { getPopularLocations } from "@/app/actions/challenges";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function ChallengeList() {
   const router = useRouter();
-  const [challenges] = useState<Challenge[]>(mockChallenges);
+
+  const {
+    data: locations,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["popularLocations"],
+    queryFn: getPopularLocations,
+  });
 
   return (
     <div className="space-y-4">
@@ -56,41 +33,68 @@ export function ChallengeList() {
         </Button>
       </div>
       <div className="grid gap-4">
-        {challenges.map((challenge) => (
-          <Card
-            key={challenge.id}
-            className="cursor-pointer hover:bg-accent/5"
-            onClick={() => router.push(`/challenges/${challenge.id}`)}
-          >
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
+        {isLoading ? (
+          <ChallengeListLoading />
+        ) : error ? (
+          <p className="text-destructive">Error: {error.message}</p>
+        ) : (
+          locations?.data?.map((location) => (
+            <Card
+              key={location.id}
+              className="cursor-pointer hover:bg-accent/5 pt-0 overflow-hidden"
+              onClick={() => router.push(`/challenges/${location.id}`)}
+            >
+              <Image
+                src={location.photoUrl || ""}
+                alt={location.name}
+                width={400}
+                height={200}
+                className="w-full h-48 object-cover"
+              />
+              <CardHeader>
                 <CardTitle className="text-lg font-medium">
-                  {challenge.title}
+                  {location.name}
                 </CardTitle>
-                <Badge variant="secondary">{challenge.category}</Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                {challenge.description}
-              </p>
-              <div className="space-y-3">
-                <Progress value={challenge.progress} />
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center">
-                    <Users className="mr-1 h-4 w-4" />
-                    {challenge.participants} participants
-                  </div>
-                  <div className="flex items-center">
-                    <Trophy className="mr-1 h-4 w-4" />
-                    {challenge.daysLeft} days left
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                <ul>
+                  {location.tags.map((tag) => (
+                    <Badge key={tag} variant="secondary" className="mr-1">
+                      {tag}
+                    </Badge>
+                  ))}
+                </ul>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  {location.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );
+}
+
+function ChallengeListLoading() {
+  return [1, 2].map((i) => (
+    <Card key={i} className="cursor-pointer hover:bg-accent/5">
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-5 w-24" />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Skeleton className="h-4 w-full mb-4" />
+        <div className="space-y-3">
+          <Skeleton className="h-2 w-full" />
+          <div className="flex justify-between">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  ));
 }

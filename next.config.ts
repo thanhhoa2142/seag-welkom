@@ -3,6 +3,9 @@ import autoImport from "unplugin-auto-import/webpack";
 import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
+  images: {
+    domains: ["lh5.googleusercontent.com"],
+  },
   webpack(config) {
     // Add SVGR support
     config.module.rules.push({
