@@ -93,17 +93,27 @@ export function ChallengeDetail({
               {combinedTasks
                 .filter((task) => !task.isCompleted)
                 .map((task) => (
-                  <div key={task.id} className="flex items-center space-x-2">
-                    <div
-                      onClick={async () => {
-                        if (task.photoUrlRequired) {
-                          // trigger take photo
-                          imageInputRef.current?.click();
-                        } else handleTaskToggle(task.id, !task.isCompleted);
-                      }}
-                      className="h-5 w-5 rounded-full border border-gray-400 flex-shrink-0 cursor-pointer"
-                    />
-                    <p className="text-sm">{task.description}</p>
+                  <div
+                    key={task.id}
+                    className="flex items-center space-x-2"
+                    onClick={async () => {
+                      if (task.photoUrlRequired) {
+                        // trigger take photo
+                        imageInputRef.current?.click();
+                      } else handleTaskToggle(task.id, !task.isCompleted);
+                    }}
+                  >
+                    <div className="h-5 w-5 rounded-full border border-gray-400 flex-shrink-0 cursor-pointer" />
+                    <p className="text-sm">
+                      {task.description}
+                      {task.photoUrlRequired && (
+                        <div className="rounded-lg p-1.5 border border-dashed border-slate-200 bg-slate-100 w-fit">
+                          <div className="size-12 bg-slate-300 rounded text-[10px] text-slate-500 text-center flex items-center justify-center">
+                            Photo is required
+                          </div>
+                        </div>
+                      )}
+                    </p>
                   </div>
                 ))}
             </div>
@@ -119,9 +129,13 @@ export function ChallengeDetail({
                     <div
                       key={task.id}
                       className="flex items-center space-x-1.5"
-                      onClick={() =>
-                        handleTaskToggle(task.id, !task.isCompleted)
-                      }
+                      onClick={() => {
+                        const result = confirm(
+                          "Are you sure you want to uncomplete this task?"
+                        );
+                        if (result)
+                          handleTaskToggle(task.id, !task.isCompleted);
+                      }}
                     >
                       <CheckCircle2Icon className="size-7 -ml-1 rounded-full flex-shrink-0 fill-emerald-700 text-white font-bold" />
                       <p className="text-sm flex items-center gap-2">
