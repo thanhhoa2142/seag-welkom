@@ -5,7 +5,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Star } from 'lucide-react';
 import { PageContainer } from '@/components/ui2/page-container';
 import { getMockLocationById, mockLocation } from '@/lib/mockData';
@@ -14,9 +13,8 @@ import { useQuery } from '@tanstack/react-query';
 
 type Task = {
   id: string;
-  description: string;
+  title: string;
   isCompleted: boolean;
-  thumbnail?: string;
 };
 
 export function ChallengeDetail() {
@@ -47,7 +45,6 @@ export function ChallengeDetail() {
         task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
       )
     );
-    // Simulate saving progress
     console.log('Task Updated ' + (location?.id || 'loc1'), {
       description: 'Your progress has been saved',
     });
@@ -58,17 +55,26 @@ export function ChallengeDetail() {
   }
 
   return (
-    <PageContainer className=' text-gray-800 min-h-screen pb-20'>
+    <PageContainer className='text-gray-800 min-h-screen pb-20'>
+      <div className='p-4'>
+        <Button
+          variant='ghost'
+          onClick={() => router.back()}
+          className='text-gray-400'
+        >
+          ← Back
+        </Button>
+      </div>
+
       <div className='relative h-48 md:h-64 w-full'>
         <Image
-          src={location.bannerImage || '/default-banner.jpg'}
+          src={location.photoUrl || '/default-banner.jpg'}
           alt={location.name}
           layout='fill'
           objectFit='cover'
         />
       </div>
 
-      {/* Challenge Content */}
       <div className='p-4 space-y-6'>
         {/* Header */}
         <div className='space-y-1'>
@@ -94,7 +100,6 @@ export function ChallengeDetail() {
           </p>
         </div>
 
-        {/* Progress Bar */}
         <div className='w-full'>
           <div className='h-1 bg-green-800 rounded-full overflow-hidden'>
             <div
@@ -104,24 +109,20 @@ export function ChallengeDetail() {
           </div>
         </div>
 
-        {/* Tasks Section */}
         <div className='space-y-2'>
           <h2 className='text-lg font-semibold'>Tasks</h2>
           <div className='space-y-4'>
             {tasks
               .filter((task) => !task.isCompleted)
-              .map((task) => (
+              .map((task, idx) => (
                 <div key={task.id} className='flex items-start space-x-4'>
                   <div
                     onClick={() => handleTaskToggle(task.id)}
                     className='mt-1 h-5 w-5 rounded-full border border-gray-400 flex-shrink-0 cursor-pointer'
                   />
                   <div className='flex-1'>
-                    <p className='text-gray-800 font-medium'>Eternal Flame</p>
-                    <p className='text-gray-400 text-sm'>
-                      Capture a photo of the Eternal Flame, symbolizing
-                      remembrance
-                    </p>
+                    <p className='text-gray-800 font-medium'>Task {idx + 1}</p>
+                    <p className='text-gray-400 text-sm'>{task.title}</p>
                   </div>
                 </div>
               ))}
@@ -157,31 +158,8 @@ export function ChallengeDetail() {
                   </div>
                 </div>
               ))}
-
-            <div className='flex items-start space-x-4'>
-              <div className='mt-1 h-5 w-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0'>
-                <span className='text-gray-800 text-xs'>✓</span>
-              </div>
-              <div className='flex-1'>
-                <p className='text-gray-300'>Eternal Flame</p>
-                <p className='text-gray-400 text-sm'>
-                  Capture a photo of the Eternal Flame, symbolizing remembrance
-                </p>
-              </div>
-            </div>
           </div>
         </div>
-      </div>
-
-      {/* Navigation Bar */}
-      <div className='fixed bottom-0 left-0 right-0 border-t flex justify-between py-4 px-6'>
-        <Button
-          variant='ghost'
-          onClick={() => router.back()}
-          className='text-gray-400'
-        >
-          ← Back
-        </Button>
       </div>
     </PageContainer>
   );
