@@ -2,7 +2,6 @@
 
 import { z } from "zod";
 import { prisma, thisUser } from "@/lib/db";
-import { revalidatePath } from "next/cache";
 
 const TaskUpdateSchema = z.object({
   id: z.string().uuid(),
@@ -31,7 +30,6 @@ export async function updateTaskStatus(data: z.infer<typeof TaskUpdateSchema>) {
       data: { taskId: validatedData.id, userId },
     });
   }
-  revalidatePath("/challenges/" + task.locationId);
   return validatedData;
 }
 

@@ -2,17 +2,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, Search } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { prisma, thisUser } from "@/lib/db";
 import Link from "next/link";
 
 export async function FriendsList() {
-  const user = await prisma.user.findFirst({ where: { username: "rinx1000" } });
+  const user = await thisUser;
   const connections = await prisma.connection.findMany({
     where: { userId: user?.id },
-    include: {
-      user: true,
-      friend: true,
-    },
+    include: { user: true, friend: true },
   });
 
   if (connections.length === 0) {

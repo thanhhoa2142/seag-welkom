@@ -227,6 +227,16 @@ model ChatbotLog {
   @@map("chatbot_logs")
 }
 
+model DailyTip {
+  id          String   @id @default(uuid())
+  title       String
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("daily_tips")
+}
+
 enum ConnectionStatus {
   PENDING
   ACCEPTED
