@@ -1,47 +1,18 @@
 "use server";
 
 import { z } from "zod";
-import { prisma } from "@/lib/db";
+import { prisma, thisUser } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-
-const TaskCreateSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().optional(),
-  locationId: z.string().uuid(),
-  points: z.number().min(0),
-});
 
 const TaskUpdateSchema = z.object({
   id: z.string().uuid(),
   isCompleted: z.boolean(),
 });
 
-export async function createTask(
-  userId: string,
-  data: z.infer<typeof TaskCreateSchema>
-) {
-  try {
-    const validatedData = TaskCreateSchema.parse(data);
-
-    const task = await prisma.task.create({
-      data: {
-        ...validatedData,
-        userId,
-      },
-    });
-
-    revalidatePath("/tasks");
-    return { success: true, data: task };
-  } catch (error) {
-    console.error("Failed to create task:", error);
-    return { success: false, error: "Failed to create task" };
-  }
-}
-
-export async function updateTaskStatus(
-  userId: string,
-  data: z.infer<typeof TaskUpdateSchema>
-) {
+export async function updateTaskStatus(data: z.infer<typeof TaskUpdateSchema>) {
+  const user = await thisUser;
+  if (!user) return { success: false, error: "User not found" };
+  const userId = user.id;
   try {
     const validatedData = TaskUpdateSchema.parse(data);
 
@@ -51,28 +22,31 @@ export async function updateTaskStatus(
 
     if (!task) return { success: false, error: "Task not found" };
 
-    const updatedTask = await prisma.task.update({
-      where: { id: validatedData.id },
-      data: {
-        isCompleted: validatedData.isCompleted,
-        completedAt: validatedData.isCompleted ? new Date() : null,
-      },
+    const completedTask = await prisma.userTask.findFirst({
+      where: { taskId: validatedData.id, userId },
     });
-
+    if (completedTask) {
+      await prisma.userTask.delete({ where: { id: completedTask.id } });
+    } else {
+      await prisma.userTask.create({
+        data: { taskId: validatedData.id, userId },
+      });
+    }
     revalidatePath("/tasks");
-    return { success: true, data: updatedTask };
+    return { success: true, data: validatedData };
   } catch (error) {
     console.error("Failed to update task:", error);
     return { success: false, error: "Failed to update task" };
   }
 }
 
-export async function getUserTasks(userId: string) {
+export async function getUserTasks(locationId?: string) {
+  const user = await thisUser;
+  if (!user) return { success: false, error: "User not found" };
+  const userId = user.id;
   try {
     const tasks = await prisma.task.findMany({
-      where: {
-        userId,
-      },
+      where: { userId, locationId },
       include: {
         location: true,
       },

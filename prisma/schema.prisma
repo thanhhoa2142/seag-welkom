@@ -143,7 +143,7 @@ model UserTask {
   userId      String   @map("user_id")
   taskId      String   @map("task_id")
   completed   Boolean  @default(false)
-  completedAt DateTime @map("completed_at")
+  completedAt DateTime @default(now()) @map("completed_at")
 
   // Relations
   user User @relation(fields: [userId], references: [id])
