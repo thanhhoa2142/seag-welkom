@@ -1,11 +1,18 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Settings2, Star } from "lucide-react";
+import { CheckCircle2, Info, QrCode, Settings2 } from "lucide-react";
 import { categoryTitleMap, pointToGetBadge } from "@/lib/constants";
 import EmojiAvatar from "@/components/ui2/emoji-avatar";
 import { prisma, thisUser } from "@/lib/db";
 import { LocationTag } from "@prisma/client";
-import { PageContainer } from "@/components/ui2/page-container";
+import Link from "next/link";
+import Point from "@/components/ui2/point";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default async function ProfilePage() {
   const user = await thisUser;
@@ -50,16 +57,16 @@ export default async function ProfilePage() {
   );
 
   return (
-    <PageContainer className="w-full flex flex-col items-center p-4 space-y-6">
+    <div className="w-full">
       {/* User Profile Section */}
-      <div className="w-full">
+      <div className="w-[calc(100% + 16px)] bg-slate-50 py-4 px-4 -m-4 border-b border-slate-200">
         <div className="flex items-center space-x-4">
           <EmojiAvatar name={user.username} />
           <div>
             <strong>{user.username}</strong>
-            {user.bio && (
-              <p className="text-gray-600 text-center text-sm -mt-0.5">
-                {user.bio}
+            {user.email && (
+              <p className="text-gray-600 text-center text-xs -mt-0.5">
+                {user.email}
               </p>
             )}
           </div>
@@ -72,13 +79,38 @@ export default async function ProfilePage() {
           </Button>
         </div>
 
-        <ul className="flex space-x-2 mt-4">
-          {Object.entries(categoryTitleMap).map(([tag, title]) =>
-            pointOfEachTag[tag as LocationTag] > pointToGetBadge ? (
+        <ul className="flex justify-between gap-x-2 mt-4">
+          {Object.entries(categoryTitleMap).map(([tag, title]) => {
+            const pointsLeft =
+              pointToGetBadge - pointOfEachTag[tag as LocationTag];
+
+            return (
               <li
                 key={tag}
-                className="flex flex-col items-center bg-gray-100 text-gray-600 text-xs p-2 rounded-lg min-w-20 font-medium"
+                className={cn(
+                  "relative flex flex-col gap-1 items-center bg-emerald-800/10 text-xs p-2 rounded-lg w-20 flex-1 font-medium",
+
+                  pointsLeft <= 0 ? "text-emerald-800" : "grayscale"
+                )}
               >
+                {pointsLeft <= 0 ? (
+                  <CheckCircle2 className="absolute -top-1.5 -right-1.5 h-6 w-6 fill-emerald-800 text-white" />
+                ) : (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="absolute -top-1.5 -right-1.5 h-6 w-6 fill-emerald-800 text-white" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="flex items-center gap-1 text-xs">
+                          You nearly get this.{" "}
+                          {pointToGetBadge - pointOfEachTag[tag as LocationTag]}{" "}
+                          <Point size={10} /> more to achieve this badge.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
                 <Image
                   src={`/badges/${tag}.svg`}
                   alt={title}
@@ -87,52 +119,58 @@ export default async function ProfilePage() {
                 />
                 {title.slice(2)}
               </li>
-            ) : null
-          )}
+            );
+          })}
         </ul>
       </div>
 
-      <section className="w-full">
-        <h2 className="text-lg font-semibold">About me</h2>
-        <p className="text-gray-600 text-sm">
-          {user.bio ??
-            "Fill up your bio to let others know how cool are you 😎"}
-        </p>
+      <section className="w-full flex justify-between items-start py-4 mt-4 border-b border-slate-200">
+        <div>
+          <h2 className="text-lg font-bold">About me</h2>
+          <p className="text-gray-600 text-sm">
+            {user.bio ??
+              "Fill up your bio to let others know how cool are you 😎"}
+          </p>
+        </div>
+        <Button variant={"outline"} size={"icon"} asChild>
+          <Link href="/friend-suggestions">
+            <QrCode className="h-4 w-4" />
+          </Link>
+        </Button>
       </section>
 
       {/* Store Section */}
-      <div className="w-full">
+      <div className="w-full py-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Store</h2>
-          <p className="text-sm text-gray-600">
-            My Point: <Star className="inline size-5 text-yellow-500" />{" "}
-            {currentPoint}
-          </p>
-          <a href="#" className="text-sm text-gray-500">
+          <div>
+            <h2 className="text-lg font-bold">Store</h2>
+            <p className="flex items-center gap-1 text-base text-gray-600 font-semibold">
+              My Point: <Point size={16} /> <strong>{currentPoint}</strong>
+            </p>
+          </div>
+          <Link href="#" className="text-sm text-gray-500">
             See All
-          </a>
+          </Link>
         </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {rewards.map((reward) => (
-            <div key={reward.id} className="p-2">
-              <div className="mb-1">
+            <div key={reward.id} className="p-2 bg-accent rounded-md">
+              <div className="mb-1 relative rounded-md h-28 w-full bg-white">
                 <Image
                   src={reward.photoUrl}
                   alt={reward.name}
-                  width={300}
-                  height={300}
-                  objectFit="cover"
-                  className="rounded-md"
+                  fill
+                  className="object-contain w-full h-full"
                 />
               </div>
               <h4 className="text-sm font-medium truncate text-center">
                 {reward.name}
               </h4>
-              <p className="text-s text-center text-gray-500">
-                <Star className="inline h-3 w-3 text-yellow-500" />
+              <p className="text-sm text-center text-gray-500 flex justify-center items-center gap-1">
+                <Point size={12} />
                 {reward.pointsRequired}
               </p>
-              <Button variant="default" className="mt-1 w-full py-1 text-xs">
+              <Button variant="default" className="w-full py-1 text-xs mt-2">
                 Exchange
               </Button>
               <p className="text-[12px] text-gray-500 mt-1 text-center">
@@ -142,6 +180,6 @@ export default async function ProfilePage() {
           ))}
         </div>
       </div>
-    </PageContainer>
+    </div>
   );
 }
