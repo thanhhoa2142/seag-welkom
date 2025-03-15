@@ -10,15 +10,16 @@ async function main() {
     prisma.chatbotLog.deleteMany(),
     prisma.userReward.deleteMany(),
     prisma.reward.deleteMany(),
-    prisma.task.deleteMany(),
     prisma.weeklyRecommendation.deleteMany(),
-    prisma.location.deleteMany(),
     prisma.chatConnection.deleteMany(),
     prisma.connection.deleteMany(),
+    prisma.userTask.deleteMany(),
     prisma.userHobbyTag.deleteMany(),
     prisma.userPreference.deleteMany(),
     prisma.user.deleteMany(),
     prisma.hobbyTag.deleteMany(),
+    prisma.task.deleteMany(),
+    prisma.location.deleteMany(),
   ]);
 
   // Create hobby tags

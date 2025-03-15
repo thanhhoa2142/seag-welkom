@@ -11,53 +11,37 @@ const TaskUpdateSchema = z.object({
 
 export async function updateTaskStatus(data: z.infer<typeof TaskUpdateSchema>) {
   const user = await thisUser;
-  if (!user) return { success: false, error: "User not found" };
+  if (!user) throw new Error("User not found");
   const userId = user.id;
-  try {
-    const validatedData = TaskUpdateSchema.parse(data);
+  const validatedData = TaskUpdateSchema.parse(data);
 
-    const task = await prisma.task.findFirst({
-      where: { id: validatedData.id, userId },
+  const task = await prisma.task.findFirst({
+    where: { id: validatedData.id },
+  });
+
+  if (!task) throw Error("Task not found");
+
+  const completedTask = await prisma.userTask.findFirst({
+    where: { taskId: validatedData.id, userId },
+  });
+  if (completedTask) {
+    await prisma.userTask.delete({ where: { id: completedTask.id } });
+  } else {
+    await prisma.userTask.create({
+      data: { taskId: validatedData.id, userId },
     });
-
-    if (!task) return { success: false, error: "Task not found" };
-
-    const completedTask = await prisma.userTask.findFirst({
-      where: { taskId: validatedData.id, userId },
-    });
-    if (completedTask) {
-      await prisma.userTask.delete({ where: { id: completedTask.id } });
-    } else {
-      await prisma.userTask.create({
-        data: { taskId: validatedData.id, userId },
-      });
-    }
-    revalidatePath("/tasks");
-    return { success: true, data: validatedData };
-  } catch (error) {
-    console.error("Failed to update task:", error);
-    return { success: false, error: "Failed to update task" };
   }
+  revalidatePath("/challenges/" + task.locationId);
+  return validatedData;
 }
 
-export async function getUserTasks(locationId?: string) {
+export async function getUserTasks() {
   const user = await thisUser;
-  if (!user) return { success: false, error: "User not found" };
+  if (!user) throw new Error("User not found");
   const userId = user.id;
-  try {
-    const tasks = await prisma.task.findMany({
-      where: { userId, locationId },
-      include: {
-        location: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+  const tasks = await prisma.userTask.findMany({
+    where: { userId },
+  });
 
-    return { success: true, data: tasks };
-  } catch (error) {
-    console.error("Failed to fetch tasks:", error);
-    return { success: false, error: "Failed to fetch tasks" };
-  }
+  return tasks;
 }

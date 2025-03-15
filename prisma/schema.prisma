@@ -36,7 +36,6 @@ model User {
   // Chat connections (both sides)
   chatConnectionsInitiated ChatConnection[] @relation("ChatUserOne")
   chatConnectionsReceived  ChatConnection[] @relation("ChatUserTwo")
-  Task                     Task[]
 
   @@index([phoneNumber, username])
   @@map("users")
@@ -131,8 +130,6 @@ model Task {
 
   // Relations
   location  Location   @relation(fields: [locationId], references: [id])
-  User      User?      @relation(fields: [userId], references: [id])
-  userId    String?
   userTasks UserTask[]
 
   @@map("tasks")
@@ -142,7 +139,6 @@ model UserTask {
   id          String   @id @default(uuid())
   userId      String   @map("user_id")
   taskId      String   @map("task_id")
-  completed   Boolean  @default(false)
   completedAt DateTime @default(now()) @map("completed_at")
 
   // Relations
@@ -249,6 +245,4 @@ enum LocationTag {
   HISTORICAL
   CULTURAL
   ART
-  SPORTS
-  FOOD
 }
