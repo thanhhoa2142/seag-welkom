@@ -1,57 +1,57 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SignUpForm() {
   return (
     <div>
       <form className="space-y-4">
         {/* Username field */}
-        <FormItem>
-          <FormLabel className="text-lg">
+        <div>
+          <Label className="text-lg">
             Username <span className="text-pink-500">*</span>
-          </FormLabel>
+          </Label>
           <Input
             className="bg-gray-100 rounded-md placeholder-gray-400 p-6"
             placeholder="Enter your username"
           />
-        </FormItem>
+        </div>
 
         {/* Phone field */}
-        <FormItem>
-          <FormLabel className="text-lg">
+        <div>
+          <Label className="text-lg">
             Phone Number <span className="text-pink-500">*</span>
-          </FormLabel>
+          </Label>
           <Input
             className="bg-gray-100 rounded-md placeholder-gray-400 p-6"
             placeholder="Enter your phone number"
           />
-        </FormItem>
+        </div>
 
         {/* Password field */}
-        <FormItem>
-          <FormLabel className="text-lg">
+        <div>
+          <Label className="text-lg">
             Password <span className="text-pink-500">*</span>
-          </FormLabel>
+          </Label>
           <Input
             type="password"
             className="bg-gray-100 rounded-md placeholder-gray-400 p-6"
             placeholder="Your Password"
           />
-        </FormItem>
+        </div>
 
         {/* Confirm Password field */}
-        <FormItem>
-          <FormLabel className="text-lg">
+        <div>
+          <Label className="text-lg">
             Confirm Password <span className="text-pink-500">*</span>
-          </FormLabel>
+          </Label>
           <Input
             type="password"
             className="bg-gray-100 rounded-md placeholder-gray-400 p-6"
             placeholder="Confirm Your Password"
           />
-        </FormItem>
+        </div>
 
         {/* Submit button */}
         <Button
