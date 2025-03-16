@@ -1,9 +1,9 @@
 /** @format */
 
 import { Button } from '@/components/ui/button';
-import { FriendsList } from './components/friends-list';
 import Link from 'next/link';
 import { QrCode } from 'lucide-react';
+import FriendsList from './components/friends-list';
 
 export const metadata: Metadata = {
   title: 'Friends',
