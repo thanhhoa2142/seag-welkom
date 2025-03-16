@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function OnboardingPage() {
   return (
     <div className='container relative min-h-screen py-8'>
-      <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[550px]'>
+      <div className='mx-auto flex max-w-[550px] w-full flex-col justify-center space-y-6 px-4 sm:px-0'>
         <div className='flex flex-col space-y-2 text-center'>
           <h1 className='text-3xl font-bold text-green-700 tracking-tight'>
             Welcome to Welkom!

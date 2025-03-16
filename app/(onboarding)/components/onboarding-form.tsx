@@ -3,6 +3,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import {
   Select,
   SelectContent,
@@ -176,9 +177,11 @@ export function OnboardingForm() {
         </ul>
       </div>
 
-      <Button type='submit' className='w-full p-5' disabled={isLoading}>
-        {isLoading ? 'Saving...' : 'Continue'}
-      </Button>
+      <Link href='/home'>
+        <Button type='submit' className='w-full p-5' disabled={isLoading}>
+          {isLoading ? 'Saving...' : 'Continue'}
+        </Button>
+      </Link>
     </form>
   );
 }

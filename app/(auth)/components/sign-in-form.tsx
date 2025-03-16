@@ -36,12 +36,14 @@ export function SignInForm() {
         </div>
 
         {/* Login button */}
-        <Button
-          formAction={login}
-          className='w-full bg-green-700 text-gray-200 rounded-md font-bold p-6'
-        >
-          Login
-        </Button>
+        <Link href={'/preference'}>
+          <Button
+            formAction={login}
+            className='w-full bg-green-700 text-gray-200 rounded-md font-bold p-6'
+          >
+            Sign in
+          </Button>
+        </Link>
       </form>
 
       <p className='text-black text-lg text-center mt-4'>

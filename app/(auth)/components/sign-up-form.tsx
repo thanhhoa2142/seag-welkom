@@ -175,12 +175,14 @@ export function SignUpForm() {
           />
 
           {/* Submit button */}
-          <Button
-            type='submit'
-            className='w-full bg-green-800 text-white font-bold rounded-md p-6'
-          >
-            {isLoading ? 'Creating account...' : 'Sign Up'}
-          </Button>
+          <Link href='/sign-in'>
+            <Button
+              type='submit'
+              className='w-full bg-green-800 text-white font-bold rounded-md p-6'
+            >
+              {isLoading ? 'Creating account...' : 'Sign Up'}
+            </Button>
+          </Link>
         </form>
 
         <p className='text-black text-center mt-4'>
