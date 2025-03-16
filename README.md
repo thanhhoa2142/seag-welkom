@@ -1,6 +1,6 @@
 ## Welkom
 
-### 1. 📲 Sign In / Sign Up (Phone-based)\*\*
+### 1. 📲 Sign In / Sign Up (Phone-based)
 
 **Must-have Feature: Seamless mobile onboarding via phone authentication**
 
