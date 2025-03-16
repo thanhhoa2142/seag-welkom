@@ -114,7 +114,7 @@ async function main() {
         longitude: 144.964566044394,
         hasArHiddenReward: Math.random() > 0.7,
         photoUrl:
-          "https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no",
+          "https://lh5.googleusercontent.com/p/AF1QipOvJXKsPmyGZ5_f7l8JtwbeGyZwE8BHRvIiizhS=w408-h271-k-no",
         tags: [LocationTag.HISTORICAL, LocationTag.CULTURAL, LocationTag.ART],
         tasks: {
           createMany: {

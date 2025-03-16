@@ -54,7 +54,6 @@ export default function Chatbot() {
     await refetch();
 
     setNewMessage("");
-    // TODO: Add bot response logic (e.g., Supabase or AI integration)
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

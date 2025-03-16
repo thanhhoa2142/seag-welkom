@@ -211,7 +211,6 @@ model ChatConnection {
   userOne User @relation("ChatUserOne", fields: [userOneId], references: [id])
   userTwo User @relation("ChatUserTwo", fields: [userTwoId], references: [id])
 
-  @@unique([userOneId, userTwoId])
   @@map("chat_connections")
 }
 

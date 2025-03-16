@@ -1,32 +1,32 @@
-/** @format */
-
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { QrCode } from 'lucide-react';
-import FriendsList from './components/friends-list';
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { QrCode } from "lucide-react";
+import FriendsList from "./components/friends-list";
 
 export const metadata: Metadata = {
-  title: 'Friends',
-  description: 'Manage your friends and chat',
+  title: "Friends",
+  description: "Manage your friends and chat",
 };
 
 export default function FriendsPage() {
   return (
-    <div className='space-y-6'>
-      <header className='flex items-center justify-between gap-4'>
-        <div className='flex flex-col'>
-          <h1 className='text-2xl font-semibold tracking-tight'>Friends</h1>
-          <p className='text-sm text-muted-foreground'>
-            This Is Private Message, Between You And Buddy. This Chat Is End To
-            End Encrypted...
-          </p>
+    <div className="space-y-6">
+      <header>
+        <div className="flex justify-between items-end gap-2 mb-2">
+          <h1 className="text-2xl font-semibold tracking-tight">Friends</h1>
+
+          <Button asChild>
+            <Link href="/friend-suggestions">
+              <QrCode className="h-4 w-4" /> Add friend
+            </Link>
+          </Button>
         </div>
-        <Button variant={'outline'} size={'icon'} asChild>
-          <Link href='/friend-suggestions'>
-            <QrCode className='h-4 w-4' />
-          </Link>
-        </Button>
+        <p className="text-sm text-muted-foreground">
+          This Is Private Message, Between You And Buddy. This Chat Is End To
+          End Encrypted...
+        </p>
       </header>
+
       <FriendsList />
     </div>
   );
