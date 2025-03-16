@@ -104,7 +104,7 @@ export function ChallengeDetail({
                     }}
                   >
                     <div className="h-5 w-5 rounded-full border border-gray-400 flex-shrink-0 cursor-pointer" />
-                    <p className="text-sm">
+                    <div className="text-sm">
                       {task.description}
                       {task.photoUrlRequired && (
                         <div className="rounded-lg p-1.5 border border-dashed border-slate-200 bg-slate-100 w-fit">
@@ -113,7 +113,7 @@ export function ChallengeDetail({
                           </div>
                         </div>
                       )}
-                    </p>
+                    </div>
                   </div>
                 ))}
             </div>

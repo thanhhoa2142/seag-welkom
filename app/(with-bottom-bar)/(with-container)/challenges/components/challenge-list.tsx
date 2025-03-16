@@ -8,6 +8,7 @@ import { LocationTag } from "@prisma/client";
 import ChallengeItem from "./challenge-item";
 import Link from "next/link";
 import { categoryTitleMap } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
 
 export function ChallengeList() {
   const [selectedCategory, setSelectedCategory] = useState<LocationTag>(
@@ -25,10 +26,13 @@ export function ChallengeList() {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold tracking-tight">Activities</h2>
-      </div>
+      <header className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold text-gray-900">Activities</h2>
 
+        <Button variant={"secondaryGreen"} size={"sm"}>
+          See all
+        </Button>
+      </header>
       <div className="flex overflow-auto space-x-4 mt-2 pb-2">
         {[...Object.keys(categoryTitleMap)].map((category) => (
           <button

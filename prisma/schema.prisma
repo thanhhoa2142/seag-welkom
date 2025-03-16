@@ -108,7 +108,7 @@ model Location {
   longitude         Float
   hasArHiddenReward Boolean       @default(false) @map("has_ar_hidden_reward")
   hiddenRewardId    String?       @map("hidden_reward_id")
-  photoUrl          String?       @map("photo_url")
+  photoUrl          String        @map("photo_url")
   createdAt         DateTime      @default(now()) @map("created_at")
   updatedAt         DateTime      @updatedAt @map("updated_at")
   tags              LocationTag[]

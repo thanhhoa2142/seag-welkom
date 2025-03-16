@@ -1,78 +1,93 @@
-"use client";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
-import { Star } from "lucide-react";
+import { prisma, thisUser } from "@/lib/db";
+import { Button } from "@/components/ui/button";
+import Point from "@/components/ui2/point";
+import { MapPin } from "lucide-react";
 
-interface Challenge {
-  id: string;
-  name: string;
-  difficulty: string;
-  distance: number; // In kilometers
-  time: string; // e.g., "1h 30m"
-  reward: number; // Points
-  photoUrl: string; // URL for the banner image
-  progress: number; // Percentage (0-100)
-}
+export async function RecentChallenge() {
+  const user = await thisUser;
+  if (!user) return null;
 
-const mockChallenge: Challenge = {
-  id: "state-library-victoria",
-  name: "State Library Victoria",
-  difficulty: "Easy",
-  distance: 0.5, // In kilometers
-  time: "1h 30m",
-  reward: 100,
-  photoUrl:
-    "https://lh5.googleusercontent.com/p/AF1QipMBwsYfFhzSaKZ-E4yOioJB834E5tDZl3FO2YP-=w408-h408-k-no",
-  progress: 50,
-};
-export function RecentChallenge() {
-  const challenge = mockChallenge;
+  const userTask = await prisma.userTask.findFirst({
+    where: { userId: user.id },
+    orderBy: { completedAt: "desc" },
+    include: {
+      task: {
+        include: {
+          location: {
+            include: {
+              tasks: {
+                include: { userTasks: { where: { userId: user.id } } },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!userTask) return null;
+  const challenge = userTask.task.location;
+  const myAccruedPoints = userTask.task.location.tasks.reduce((acc, task) => {
+    const userTask = task.userTasks.find((ut) => ut.userId === user.id);
+    return acc + (userTask ? task.points : 0);
+  }, 0);
+  const totalPoints = userTask.task.location.tasks.reduce(
+    (acc, task) => acc + task.points,
+    0
+  );
 
   return (
-    <Card className="w-full shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold text-gray-900">
+    <section>
+      <header className="flex items-center justify-between mb-2">
+        <h2 className="text-lg font-semibold text-gray-900">
           Recent Active Challenge
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-4">
+        </h2>
+
+        <Button variant={"secondaryGreen"} size={"sm"}>
+          See all
+        </Button>
+      </header>
+      <div className="w-full bg-accent rounded-md p-2">
         <div className="flex items-center space-x-4">
           {/* Banner Image */}
           <div className="relative w-20 h-20 rounded-lg overflow-hidden">
             <Image
               src={challenge.photoUrl}
               alt={challenge.name}
-              layout="fill"
-              objectFit="cover"
+              fill
+              className="object-cover"
             />
           </div>
-
           {/* Challenge Details */}
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-gray-900 uppercase">
-              {challenge.name}
-            </h3>
-            <div className="flex items-center space-x-2 text-sm text-gray-500 mt-1">
-              <span>{challenge.difficulty}</span>
-              <span>&bull;</span>
-              <span>{challenge.distance}</span>
-              <span>&bull;</span>
-              <span>{challenge.time}</span>
-              <span className="flex items-center text-yellow-500">
-                <Star className="w-4 h-4 mr-1" />
-                {challenge.reward}
+            <h3 className="font-semibold leading-5 mb-1">{challenge.name}</h3>
+            <p className="text-xs leading-3.5 text-gray-500 line-clamp-2">
+              {challenge.description}
+            </p>
+            <div className="flex justify-between items-center space-x-2 text-sm text-gray-500 mt-2">
+              <span className="inline-flex items-center gap-1 font-semibold text-sm">
+                <Point size={12} />
+                {totalPoints}
               </span>
+
+              <Button
+                size={"xs"}
+                variant={"outline"}
+                className="gap-1 bg-slate-100"
+              >
+                Direction <MapPin />
+              </Button>
             </div>
             {/* Progress Bar */}
-            <Progress
-              value={challenge.progress}
-              className="mt-2 h-2 bg-gray-200"
-            />
           </div>
         </div>
-      </CardContent>
-    </Card>
+        <Progress
+          value={(myAccruedPoints / totalPoints) * 100}
+          className="mt-2 h-2 bg-gray-200"
+        />
+      </div>
+    </section>
   );
 }
