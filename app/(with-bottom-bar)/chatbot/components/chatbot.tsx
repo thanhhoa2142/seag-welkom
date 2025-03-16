@@ -116,7 +116,6 @@ export default function Chatbot() {
             className="flex-1 bg-gray-100 border-none rounded-md"
           />
           <Button
-            size="sm"
             onClick={handleSendMessage}
             disabled={!newMessage.trim() || isPending}
           >

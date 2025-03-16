@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Trophy } from "lucide-react";
+import EmojiAvatar from "@/components/ui2/emoji-avatar";
 
 interface Activity {
   id: string;
@@ -60,15 +60,7 @@ export function FriendActivity() {
               key={activity.id}
               className="flex items-start space-x-4 border-b last:border-0 pb-4 last:pb-0"
             >
-              <Avatar>
-                <AvatarImage
-                  src={activity.user.avatar}
-                  alt={activity.user.name}
-                />
-                <AvatarFallback>
-                  {activity.user.name.slice(0, 2)}
-                </AvatarFallback>
-              </Avatar>
+              <EmojiAvatar name={activity.user.name} />
               <div className="flex-1 space-y-1">
                 <p className="text-sm font-medium leading-none">
                   {activity.user.name}

@@ -3,11 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Send } from "lucide-react";
+import EmojiAvatar from "@/components/ui2/emoji-avatar";
 
 interface Message {
   id: string;
@@ -100,10 +100,7 @@ export function ChatWindow({ friendId }: ChatWindowProps) {
             <Button variant="ghost" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <Avatar>
-              <AvatarImage src={friend.avatar} alt={friend.name} />
-              <AvatarFallback>{friend.name.slice(0, 2)}</AvatarFallback>
-            </Avatar>
+            <EmojiAvatar name={friend.name} />
             <div>
               <h2 className="font-semibold">{friend.name}</h2>
               <Badge

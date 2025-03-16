@@ -8,10 +8,10 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
 import { UserPlus } from "lucide-react";
+import EmojiAvatar from "@/components/ui2/emoji-avatar";
 
 interface FriendSuggestion {
   id: string;
@@ -77,10 +77,7 @@ export function FriendSuggestions() {
       {mockSuggestions.map((friend) => (
         <Card key={friend.id}>
           <CardHeader className="flex flex-row items-center gap-4">
-            <Avatar className="h-12 w-12">
-              <AvatarImage src={friend.avatar} alt={friend.name} />
-              <AvatarFallback>{friend.name.slice(0, 2)}</AvatarFallback>
-            </Avatar>
+            <EmojiAvatar name={friend.name} />
             <div className="flex flex-col">
               <h3 className="font-semibold">{friend.name}</h3>
               <p className="text-sm text-muted-foreground">
