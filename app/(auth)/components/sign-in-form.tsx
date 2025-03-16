@@ -1,31 +1,58 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { login, signup } from "@/app/actions/auth";
-import { Label } from "@/components/ui/label";
+/** @format */
+
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { login } from '@/app/actions/auth';
+import { Label } from '@/components/ui/label';
+import Link from 'next/link';
 
 export function SignInForm() {
   return (
-    <form className="space-y-4">
-      <div className="space-y-2">
-        <Label>Username or Phone</Label>
-        <Input placeholder="Enter your username or phone" name="username" />
-      </div>
-      <div className="space-y-2">
-        <Label>Password</Label>
-        <Input
-          type="password"
-          placeholder="Enter your password"
-          name="password"
-        />
-      </div>
-      <div>
-        <Button formAction={login} className="w-full">
-          Sign in
+    <div className='max-w-md '>
+      <form className='space-y-4'>
+        <div className='space-y-2'>
+          <Label className='text-gray-700 text-lg font-bold'>
+            Username <span className='text-red-500'>*</span>
+          </Label>
+          <Input
+            className='bg-gray-100 rounded-md placeholder-gray-400 p-6'
+            placeholder='Username...'
+            name='username'
+          />
+        </div>
+
+        <div className='space-y-2'>
+          <Label className='text-gray-700 text-lg font-bold'>
+            Password <span className='text-red-500'>*</span>
+          </Label>
+          <Input
+            type='password'
+            className='bg-gray-100 rounded-md placeholder-gray-400 p-6'
+            placeholder='Your Password'
+            name='password'
+          />
+        </div>
+
+        {/* Login button */}
+        <Button
+          formAction={login}
+          className='w-full bg-green-700 text-gray-200 rounded-md font-bold p-6'
+        >
+          Login
         </Button>
-        <Button variant={"secondary"} formAction={signup} className="w-full">
-          Sign up
-        </Button>
-      </div>
-    </form>
+      </form>
+
+      <p className='text-black text-lg text-center mt-4'>
+        Don’t have an account?
+        <Link
+          href='/sign-up'
+          className='underline ml-2 text-green-700 font-bold text-lg'
+        >
+          Sign Up
+        </Link>
+      </p>
+    </div>
   );
 }

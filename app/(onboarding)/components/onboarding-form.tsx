@@ -1,19 +1,21 @@
-"use client";
+/** @format */
 
-import { Button } from "@/components/ui/button";
+'use client';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { countryOptions, universityInMelbourne } from "@/lib/constants";
-import { getHobbies } from "@/app/actions/hobbies";
-import { HobbyTag } from "@prisma/client";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { FormEvent } from "react";
+} from '@/components/ui/select';
+import { countryOptions, universityInMelbourne } from '@/lib/constants';
+import { getHobbies } from '@/app/actions/hobbies';
+import { HobbyTag } from '@prisma/client';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { FormEvent } from 'react';
 
 interface FormData {
   country: string;
@@ -26,9 +28,9 @@ export function OnboardingForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [allHobbies, setAllHobbies] = useState<HobbyTag[]>([]);
   const [formData, setFormData] = useState<FormData>({
-    country: "",
-    university: "",
-    groupPreference: "",
+    country: '',
+    university: '',
+    groupPreference: '',
     hobbies: [],
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
@@ -41,13 +43,13 @@ export function OnboardingForm() {
     const newErrors: Partial<FormData> = {};
 
     if (!formData.country) {
-      newErrors.country = "Please select your country.";
+      newErrors.country = 'Please select your country.';
     }
     if (!formData.university) {
-      newErrors.university = "Please select your university.";
+      newErrors.university = 'Please select your university.';
     }
     if (!formData.groupPreference) {
-      newErrors.groupPreference = "Please select your group preference.";
+      newErrors.groupPreference = 'Please select your group preference.';
     }
 
     setErrors(newErrors);
@@ -63,7 +65,7 @@ export function OnboardingForm() {
       // Add your form submission logic here
       console.log(formData);
     } catch (error) {
-      console.error("Form submission error:", error);
+      console.error('Form submission error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -79,17 +81,19 @@ export function OnboardingForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="country">Which country are you from?</Label>
+    <form onSubmit={handleSubmit} className='space-y-6'>
+      <div className='space-y-2 '>
+        <Label htmlFor='country' className='text-lg '>
+          Which country are you from?
+        </Label>
         <Select
           value={formData.country}
           onValueChange={(value) =>
             setFormData((prev) => ({ ...prev, country: value }))
           }
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your country" />
+          <SelectTrigger className='w-full p-5'>
+            <SelectValue placeholder='Select your country' />
           </SelectTrigger>
           <SelectContent>
             {countryOptions.map((option) => (
@@ -100,20 +104,22 @@ export function OnboardingForm() {
           </SelectContent>
         </Select>
         {errors.country && (
-          <p className="text-sm text-destructive">{errors.country}</p>
+          <p className='text-sm text-destructive'>{errors.country}</p>
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="university">Which university do you attend?</Label>
+      <div className='space-y-2'>
+        <Label htmlFor='university' className='text-lg '>
+          Which university do you attend?
+        </Label>
         <Select
           value={formData.university}
           onValueChange={(value) =>
             setFormData((prev) => ({ ...prev, university: value }))
           }
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your university" />
+          <SelectTrigger className='w-full p-5'>
+            <SelectValue placeholder='Select your university' />
           </SelectTrigger>
           <SelectContent>
             {universityInMelbourne.map((option) => (
@@ -124,12 +130,12 @@ export function OnboardingForm() {
           </SelectContent>
         </Select>
         {errors.university && (
-          <p className="text-sm text-destructive">{errors.university}</p>
+          <p className='text-sm text-destructive'>{errors.university}</p>
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="groupPreference">
+      <div className='space-y-2'>
+        <Label htmlFor='groupPreference' className='text-lg '>
           What&apos;s your group preference?
         </Label>
         <Select
@@ -138,27 +144,27 @@ export function OnboardingForm() {
             setFormData((prev) => ({ ...prev, groupPreference: value }))
           }
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your preference" />
+          <SelectTrigger className='w-full p-5'>
+            <SelectValue placeholder='Select your preference' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="same-country">Same Country</SelectItem>
-            <SelectItem value="same-university">Same University</SelectItem>
-            <SelectItem value="mixed">Mixed Group</SelectItem>
-            <SelectItem value="single">Explore by myself</SelectItem>
-            <SelectItem value="yolo">YOLO</SelectItem>
+            <SelectItem value='same-country'>Same Country</SelectItem>
+            <SelectItem value='same-university'>Same University</SelectItem>
+            <SelectItem value='mixed'>Mixed Group</SelectItem>
+            <SelectItem value='single'>Explore by myself</SelectItem>
+            <SelectItem value='yolo'>YOLO</SelectItem>
           </SelectContent>
         </Select>
         {errors.groupPreference && (
-          <p className="text-sm text-destructive">{errors.groupPreference}</p>
+          <p className='text-sm text-destructive'>{errors.groupPreference}</p>
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label>What are your hobbies?</Label>
-        <ul className="flex flex-wrap gap-4 mt-1">
+      <div className='space-y-2'>
+        <Label className='text-lg '>What are your hobbies?</Label>
+        <ul className='flex flex-wrap gap-4 mt-1'>
           {allHobbies.map((hobby) => (
-            <li key={hobby.id} className="flex items-center gap-2">
+            <li key={hobby.id} className='flex items-center gap-2'>
               <Checkbox
                 onClick={() => handleHobbyToggle(hobby.id)}
                 value={hobby.id}
@@ -170,8 +176,8 @@ export function OnboardingForm() {
         </ul>
       </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Saving..." : "Continue"}
+      <Button type='submit' className='w-full p-5' disabled={isLoading}>
+        {isLoading ? 'Saving...' : 'Continue'}
       </Button>
     </form>
   );
