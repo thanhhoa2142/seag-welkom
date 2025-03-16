@@ -177,7 +177,7 @@ export function SignUpForm() {
           {/* Submit button */}
           <Button
             type='submit'
-            className='w-full bg-green-800 text-white font-bold rounded-md p-5'
+            className='w-full bg-green-800 text-white font-bold rounded-md p-6'
           >
             {isLoading ? 'Creating account...' : 'Sign Up'}
           </Button>
