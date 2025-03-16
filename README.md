@@ -1,160 +1,48 @@
 <img src="https://github.com/user-attachments/assets/bf0c8ca2-7d1d-438d-bfc1-518e24ecb8d9" width="40" height="40"/>
-SEAG
-
 
 ## Welkom
 
 ![2025-03-16 16 34 53](https://github.com/user-attachments/assets/9d99928f-771a-4e7b-9975-3d840cf41db7)
 
-### 1. 📲 Sign In / Sign Up (Phone-based)
+## Inspiration
 
-**Must-have Feature: Seamless mobile onboarding via phone authentication**
+Moving to a new country is exciting but can also be overwhelming for international students. Many feel isolated due to cultural differences and a lack of local knowledge. While guides exist, they are often difficult to follow and can demotivate students from exploring. Welkom was created to turn city discovery into an interactive, social, and rewarding experience, making integration into student life more engaging.
 
-- [ ] Phone number input with country code support.
-- [ ] OTP verification system (SMS-based).
-- [ ] Error handling and retry mechanism for OTP.
-- [ ] Secure user token/session management.
-- [ ] Auto-login support using secure device storage.
-      **Reference**: Firebase Phone Auth - Google Docs
+## What it does
 
----
+Welkom is a gamified onboarding platform that helps international students in Australia explore their new environment while overcoming cultural barriers, language differences, and social isolation. Students can embark on personalized exploration journeys, interact with an AI assistant, complete check-ins and challenges, earn rewards, and connect with friends through social features.
 
-### 2. 📝 User Preference Questionnaire
+## How we built it
 
-Must-have Feature: Capture user interests and preferences for personalized journey
+Welkom was developed using the following tech stack:
 
-- [ ] Create form UI for selecting city areas, university, journey style (group/solo), hobbies.
-- [ ] Store responses in user profile (DB).
-- [ ] Recommend journey themes based on preferences.
-- [ ] Display personalized welcome message and journey preview.
-      **Reference**:
+- Prototyping: Figma.
+- Frontend: NextJS, PWA
+- Database: PostgresSQL
+- AI Agent: DataStax
 
----
+## Challenges we ran into
 
-### 3. 🎯 User Preferences Tailoring + Matching Algorithm
+## Accomplishments that we're proud of
 
-Must-have Feature: Match users using LLM/NLP-based clustering
+- Built a Consult Chatbot & AI Agent – Integrated DataStax LangFlow to help users find events tailored to their interests.
+- Developed a Challenges & Reward System – Gamified city exploration, allowing users to earn rewards as they discover new places.
+- Enhanced Social Features – Enabled users to connect with like-minded individuals and explore Melbourne together.
 
-- [ ] Build feature vector from questionnaire data.
-- [ ] Apply LLM/NLP clustering or k-means for similarity grouping.
-- [ ] Display match summary and shared interests.
-      **Reference**:
+## What we learned
 
----
+## What's next for WELKOM
 
-### 4. 🤝 Challenge vs Checklist
+- Advanced AI Event Recommendations – Implementing event output integration from the AI agent to suggest personalized activities for users.
+- Treasure Hunting with AR – Introducing Augmented Reality (AR) to make city exploration even more interactive and engaging.
+- Security & Usability Testing – Conducting thorough app testing to improve performance, security, and user experience before wider rollout.
 
-Must-have Feature: Show engaging challenge in game-like card
+## Guide to run the platform
 
-- [ ] Show challenge list (destinations)
-- [ ] Organize challenges by their tags and badges for each tag
-- [ ] Show checklist upon selected challenge
-- [ ] Handle transition logic if match cancels.
-- [ ] Enable preference change and journey reinitialization.
-- [ ] Notify partner upon journey changes or progress.
-      **Reference**: Onboarding Gamification - UX Collective
-
----
-
-### 5. 🧭 Location-based Challenge Journey (GPS + AR)
-
-Must-have Feature: Start immersive GPS/AR exploration journey
-
-- [ ] Build interactive journey map with location markers.
-- [ ] Geofence-based task unlocking.
-- [ ] AR scanner integration (Vuforia/ARKit/ARCore).
-- [ ] Notify users when near challenge location.
-- [ ] Track completed location visits in real-time.
-      **Reference**: ARCore Geospatial APIs
-
----
-
-### 6. 📋 Checklist Completion at Locations
-
-Must-have Feature: Task list per location (learning, exploring)
-
-- [ ] Create UI checklist for location-based activities.
-- [ ] Track task completion and reward eligibility.
-- [ ] Enable photo/audio proof upload if needed.
-- [ ] Show progress bar for each location.
-- [ ] Unlock fun facts or trivia post-checklist.
-      **Reference**: Task Tracking UX Patterns - UX Planet
-
----
-
-### 7. 🔍 AR Hidden Rewards Discovery\*\*
-
-- [ ] Scan environment with AR lens to locate rewards.
-- [ ] Use marker-based or surface-detection AR.
-- [ ] Reward drop animation when found.
-- [ ] Log item found + timestamp.
-- [ ] Display reward inventory in user profile.
-      **Reference**: Vuforia AR Marker Implementation
-
----
-
-### 8. 🏆 Points, Badges, and Hidden Rewards System\*\*
-
-Must-have Feature: Gamified reward mechanics
-
-- [ ] Award points for task completions and streaks.
-- [ ] Create a tiered badge system.
-- [ ] Track hidden reward collection progress.
-- [ ] Build leaderboard (local/global view).
-- [ ] Enable shareable achievement screens.
-      **Reference**: Gamification Design – Octalysis Framework
-
----
-
-### 9. 👕 Redeem Physical Swag\*\*
-
-Must-have Feature: Reward redemption system (limited-time)
-
-- [ ] Swag inventory page (e.g., T-shirt, vouchers).
-- [ ] Reward redemption condition validation.
-- [ ] Generate one-time QR/code for in-store pickup.
-- [ ] Track redemption and prevent abuse.
-- [ ] Notification when inventory is low or expired.
-      **Reference**: Loyalty Rewards Design – UX Collective
-
----
-
-### 10. 📅 Journey/Event Notifications\*\*
-
-Must-have Feature: Dynamic notification engine
-
-- [ ] Weekly push notification scheduling.
-- [ ] Event-based reminder system (e.g., location nearby).
-- [ ] Personalized content updates.
-- [ ] In-app notification center.
-- [ ] Notification preferences management.
-      **Reference**: FCM Push Notifications
-
----
-
-### 11. 💬 Matched Chat Functionality (Optional)\*\*
-
-Must-have Feature: Lightweight social interaction
-
-- [ ] Match-based chat initiation.
-- [ ] Firebase Realtime/Firestore chat backend.
-- [ ] Block/report features.
-- [ ] Emoji + basic media support.
-- [ ] Notification for new messages.
-      **Reference**: Firestore Chat App Guide
-
----
-
-### 12. 🤖 Chatbot Help (StudyMelbourne Knowledge Base)\*\*
-
-Must-have Feature: 24/7 smart assistant
-
-- [ ] Integrate Chatbot with curated knowledge base.
-- [ ] Enable contextual queries (e.g., transport, food, events).
-- [ ] Support natural language understanding (Dialogflow/LLM API).
-- [ ] Escalation to human support if needed.
-- [ ] Conversation history tracking.
-      **Reference**: Dialogflow Knowledge Base Integration
+- This app is intended to run on IOS device - you might want to run in on IOS device for best exprience
+- Visit the website
+- Find Share Button on the same page and save to home
+- Enjoy the app
 
 ```mermaid
 erDiagram
