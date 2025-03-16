@@ -20,7 +20,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    href: "/",
+    href: "/home",
     label: "Home",
     icon: Home,
   },

@@ -29,7 +29,7 @@ export function ChallengeList() {
         <h2 className="text-xl font-semibold tracking-tight">Activities</h2>
       </div>
 
-      <div className="flex overflow-auto space-x-4 mt-2">
+      <div className="flex overflow-auto space-x-4 mt-2 pb-2">
         {[...Object.keys(categoryTitleMap)].map((category) => (
           <button
             key={category}

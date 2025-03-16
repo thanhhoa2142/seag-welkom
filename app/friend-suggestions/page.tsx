@@ -1,4 +1,4 @@
-import { FriendSuggestions } from "../(with-bottom-bar)/friends/components/friend-suggestions";
+import { FriendSuggestions } from "../(with-bottom-bar)/(with-container)/friends/components/friend-suggestions";
 import { PageContainer } from "@/components/ui2/page-container";
 
 export const metadata: Metadata = {

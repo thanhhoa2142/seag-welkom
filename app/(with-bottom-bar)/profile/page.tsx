@@ -13,6 +13,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import BadgeHistorical from "../../../public/badges/HISTORICAL.svg";
+import BadgeNature from "../../../public/badges/NATURE.svg";
+import BadgeCultural from "../../../public/badges/CULTURAL.svg";
+import BadgeArt from "../../../public/badges/ART.svg";
+
+const categoryBadges = {
+  [LocationTag.HISTORICAL]: BadgeHistorical,
+  [LocationTag.NATURE]: BadgeNature,
+  [LocationTag.CULTURAL]: BadgeCultural,
+  [LocationTag.ART]: BadgeArt,
+};
 
 export default async function ProfilePage() {
   const user = await thisUser;
@@ -57,9 +68,9 @@ export default async function ProfilePage() {
   );
 
   return (
-    <div className="w-full">
+    <div className="overflow-auto">
       {/* User Profile Section */}
-      <div className="w-[calc(100% + 16px)] bg-slate-50 py-4 px-4 -m-4 border-b border-slate-200">
+      <div className="w-full bg-slate-50 py-4 px-4 border-b border-slate-200">
         <div className="flex items-center space-x-4">
           <EmojiAvatar name={user.username} />
           <div>
@@ -83,6 +94,7 @@ export default async function ProfilePage() {
           {Object.entries(categoryTitleMap).map(([tag, title]) => {
             const pointsLeft =
               pointToGetBadge - pointOfEachTag[tag as LocationTag];
+            const CustomBadge = categoryBadges[tag as LocationTag];
 
             return (
               <li
@@ -111,12 +123,7 @@ export default async function ProfilePage() {
                     </Tooltip>
                   </TooltipProvider>
                 )}
-                <Image
-                  src={`/badges/${tag}.svg`}
-                  alt={title}
-                  width={32}
-                  height={32}
-                />
+                <CustomBadge className="h-8 w-8" />
                 {title.slice(2)}
               </li>
             );
@@ -124,7 +131,7 @@ export default async function ProfilePage() {
         </ul>
       </div>
 
-      <section className="w-full flex justify-between items-start py-4 mt-4 border-b border-slate-200">
+      <section className="w-full flex justify-between items-start p-4 mt-4 border-b border-slate-200">
         <div>
           <h2 className="text-lg font-bold">About me</h2>
           <p className="text-gray-600 text-sm">
@@ -140,7 +147,7 @@ export default async function ProfilePage() {
       </section>
 
       {/* Store Section */}
-      <div className="w-full py-4">
+      <div className="w-full p-4">
         <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-lg font-bold">Store</h2>

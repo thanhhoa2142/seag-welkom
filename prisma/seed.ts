@@ -337,6 +337,36 @@ async function main() {
       description:
         "Melbourne is safe, but stay alert at night in less busy areas. Use rideshare apps like Uber or Didi if traveling late. Save emergency numbers: 000 (police/fire/ambulance) and your university’s support line.",
     },
+    {
+      title: "Enjoy Melbourne’s Parks and Outdoor Spaces",
+      description:
+        "Melbourne is known for its green spaces. Visit the Royal Botanic Gardens, Carlton Gardens, or Fitzroy Gardens for a relaxing day. You can also rent a bike to explore the city or enjoy a picnic at one of the many parks.",
+    },
+    {
+      title: "Explore Melbourne’s Vibrant Food Scene",
+      description:
+        "Melbourne offers a diverse food scene with international cuisine. Visit Queen Victoria Market for fresh produce, street food, and local goods. Try out Melbourne’s laneways for hidden cafés and unique dining spots.",
+    },
+    {
+      title: "Make the Most of Melbourne’s Festivals and Events",
+      description:
+        "Melbourne hosts numerous festivals and events throughout the year, from the Melbourne International Comedy Festival to White Night and the Melbourne Food and Wine Festival. Keep an eye on event calendars for free or discounted tickets.",
+    },
+    {
+      title: "Stay Connected with Free Wi-Fi Hotspots",
+      description:
+        "Melbourne offers free Wi-Fi in select public areas like the State Library, Federation Square, and Flinders Street Station. You can also connect to free Wi-Fi in many cafés, restaurants, and public spaces throughout the city.",
+    },
+    {
+      title: "Navigating Melbourne’s Weather",
+      description:
+        "Melbourne’s weather is known for its unpredictability. Pack layers to be prepared for changing conditions, and always carry an umbrella. Keep an eye on the weather forecast through apps like Weatherzone or the Bureau of Meteorology.",
+    },
+    {
+      title: "Getting Involved in Melbourne’s Cultural Scene",
+      description:
+        "Melbourne has a rich arts and cultural scene. Visit the National Gallery of Victoria, the Australian Centre for Contemporary Art, and local theaters like the Melbourne Theatre Company. Many venues offer student discounts.",
+    },
   ];
 
   await prisma.dailyTip.createMany({ data: tips });

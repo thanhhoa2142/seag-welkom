@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "SEAG Welkom",
   },
 };
@@ -34,7 +34,9 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#000000",
+  themeColor: "oklch(0.696 0.17 162.48)",
+  viewportFit: "cover",
+  userScalable: false,
 };
 
 export default function RootLayout({

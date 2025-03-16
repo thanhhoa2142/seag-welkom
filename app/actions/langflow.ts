@@ -1,248 +1,28 @@
 "use server";
 
+import { prisma, thisUser } from "@/lib/db";
+import { mainLangflow } from "@/lib/langflow/server";
+
 export async function askLangflow(inputValue: string) {
-  return fetch(
-    "https://astra.datastax.com/api/v1/run/94f4fe19-a4e9-49de-a274-de2f0b747103?stream=false",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.LANGFLOW_API_KEY!,
-      },
-      body: JSON.stringify({
-        input_value: inputValue,
-        output_type: "chat",
-        input_type: "chat",
-        tweaks: {
-          "ChatInput-o8sBQ": {
-            background_color: "",
-            chat_icon: "",
-            files: "",
-            input_value:
-              "Where Can I find more information about living in Melbourne?\n",
-            sender: "User",
-            sender_name: "",
-            session_id: "",
-            should_store_message: true,
-            text_color: "",
-          },
-          "ParseData-bK4A1": {
-            sep: "\n",
-            template: "{text}",
-          },
-          "Prompt-DyFrZ": {
-            context: "",
-            question: "",
-            template:
-              "Context:\n{context}\n\nHistory:\n{memory}\n\nInstructions:\nBased on the context provided above and our previous interactions, please answer the following question as if you were a friendly advisor for international students in Melbourne. Your answer should:\n- Include local insights (e.g., transportation tips, local events, cultural nuances, student resources).\n- Be concise, actionable, and tailored to someone exploring Melbourne.\n- Refer to historical data if it enhances the answer.\n- Ultilize context data if it is related to the question and answer\n\nTrust Search Content\n{search}\n\nQuestion:\n{question}\n\nAnswer:",
-            tool_placeholder: "",
-            memory: "",
-            search: "",
-          },
-          "SplitText-v0NX2": {
-            chunk_overlap: 200,
-            chunk_size: 1000,
-            separator: "\n",
-            text_key: "text",
-          },
-          "ChatOutput-hAZfj": {
-            background_color: "",
-            chat_icon: "",
-            clean_data: true,
-            data_template: "{text}",
-            input_value: "",
-            sender: "Machine",
-            sender_name: "AI",
-            session_id: "",
-            should_store_message: true,
-            text_color: "",
-          },
-          "OpenAIEmbeddings-iMG9E": {
-            chunk_size: 1000,
-            client: "",
-            default_headers: {},
-            default_query: {},
-            deployment: "",
-            dimensions: null,
-            embedding_ctx_length: 1536,
-            max_retries: 3,
-            model: "text-embedding-3-small",
-            model_kwargs: {},
-            openai_api_base: "",
-            openai_api_key: "OpenAI-SEAG",
-            openai_api_type: "",
-            openai_api_version: "",
-            openai_organization: "",
-            openai_proxy: "",
-            request_timeout: null,
-            show_progress_bar: false,
-            skip_empty: false,
-            tiktoken_enable: true,
-            tiktoken_model_name: "",
-          },
-          "OpenAIEmbeddings-vuP9t": {
-            chunk_size: 1000,
-            client: "",
-            default_headers: {},
-            default_query: {},
-            deployment: "",
-            dimensions: null,
-            embedding_ctx_length: 1536,
-            max_retries: 3,
-            model: "text-embedding-3-small",
-            model_kwargs: {},
-            openai_api_base: "",
-            openai_api_key: "OpenAI-SEAG",
-            openai_api_type: "",
-            openai_api_version: "",
-            openai_organization: "",
-            openai_proxy: "",
-            request_timeout: null,
-            show_progress_bar: false,
-            skip_empty: false,
-            tiktoken_enable: true,
-            tiktoken_model_name: "",
-          },
-          "File-Bp4hB": {
-            concurrency_multithreading: 4,
-            delete_server_file_after_processing: true,
-            ignore_unspecified_files: false,
-            ignore_unsupported_extensions: true,
-            path: "2025-Melbourne-Insider_Guides-DIGITAL.pdf",
-            silent_errors: false,
-            use_multithreading: false,
-          },
-          "OpenAIModel-UAHwO": {
-            api_key: "OpenAI-SEAG",
-            input_value: "",
-            json_mode: false,
-            max_retries: 5,
-            max_tokens: null,
-            model_kwargs: {},
-            model_name: "gpt-4o-mini",
-            openai_api_base: "",
-            seed: 1,
-            stream: false,
-            system_message: "",
-            temperature: 0.1,
-            timeout: 700,
-          },
-          "AstraDB-PQC1b": {
-            advanced_search_filter: "{}",
-            api_endpoint:
-              "https://7bbda82c-bb9f-407a-823b-ebaf4232e52c-us-east-2.apps.astra.datastax.com",
-            astradb_vectorstore_kwargs: "{}",
-            autodetect_collection: true,
-            collection_name: "verified",
-            content_field: "",
-            database_name: "SEAG-RAG-STORE",
-            deletion_field: "",
-            embedding_choice: "Embedding Model",
-            environment: "",
-            ignore_invalid_documents: false,
-            keyspace: "",
-            number_of_results: 4,
-            search_query: "",
-            search_score_threshold: 0,
-            search_type: "Similarity",
-            should_cache_vector_store: true,
-            token: "ASTRA_DB_APP_Token",
-          },
-          "AstraDB-3l4Ct": {
-            advanced_search_filter: "{}",
-            api_endpoint:
-              "https://7bbda82c-bb9f-407a-823b-ebaf4232e52c-us-east-2.apps.astra.datastax.com",
-            astradb_vectorstore_kwargs: "{}",
-            autodetect_collection: true,
-            collection_name: "verified",
-            content_field: "",
-            database_name: "SEAG-RAG-STORE",
-            deletion_field: "",
-            embedding_choice: "Embedding Model",
-            environment: "",
-            ignore_invalid_documents: false,
-            keyspace: "",
-            number_of_results: 4,
-            search_query: "",
-            search_score_threshold: 0,
-            search_type: "Similarity",
-            should_cache_vector_store: true,
-            token: "ASTRA_DB_APP_Token",
-          },
-          "TextInput-UadFa": {
-            input_value: "Dylan",
-          },
-          "Memory-Zx8I7": {
-            n_messages: 100,
-            order: "Ascending",
-            sender: "Machine and User",
-            sender_name: "",
-            session_id: "",
-            template: "{sender_name}: {text}",
-          },
-          "TextInput-rB3H9": {
-            input_value: "2",
-          },
-          "Agent-SKDTg": {
-            add_current_date_tool: true,
-            agent_description:
-              "A helpful assistant with access to the following tools:",
-            agent_llm: "OpenAI",
-            api_key: "OpenAI-SEAG",
-            handle_parsing_errors: true,
-            input_value: "",
-            json_mode: false,
-            max_iterations: 15,
-            max_retries: 5,
-            max_tokens: null,
-            model_kwargs: {},
-            model_name: "gpt-4o-mini",
-            n_messages: 100,
-            openai_api_base: "",
-            order: "Ascending",
-            seed: 1,
-            sender: "Machine and User",
-            sender_name: "",
-            session_id: "",
-            system_prompt:
-              "You are an helpful AI agents, using TalivyAI to search for useful information. Search any information that can help the user on.\nOnly use the domain and sources from government websites: https://studymelbourne.vic.gov.au/.\n\nFormat the output in an concise and helpful way",
-            temperature: 0.1,
-            template: "{sender_name}: {text}",
-            timeout: 700,
-            verbose: true,
-          },
-          "TavilySearchComponent-0F4Xp": {
-            api_key: "TavilyAI",
-            include_answer: true,
-            include_images: true,
-            max_results: 5,
-            query: "",
-            search_depth: "advanced",
-            topic: "general",
-            tools_metadata: [
-              {
-                name: "TavilySearchComponent-fetch_content",
-                description:
-                  "fetch_content(api_key: Message) - **Tavily AI** is a search engine optimized for LLMs and RAG,         aimed at efficient, quick, and persistent search results.",
-                tags: ["TavilySearchComponent-fetch_content"],
-              },
-              {
-                name: "TavilySearchComponent-fetch_content_text",
-                description:
-                  "fetch_content_text(api_key: Message) - **Tavily AI** is a search engine optimized for LLMs and RAG,         aimed at efficient, quick, and persistent search results.",
-                tags: ["TavilySearchComponent-fetch_content_text"],
-              },
-            ],
-          },
-          "Prompt-YLqng": {
-            template: "",
-            tool_placeholder: "",
-          },
-        },
-      }),
-    }
-  )
-    .then((res) => res.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.error("Error:", error));
+  const user = await thisUser;
+  if (!user) throw new Error("User not found");
+  const response = await mainLangflow.run(inputValue);
+  const output = response.chatOutputText();
+  if (!output)
+    throw new Error(
+      "Sorry, Kom is travelling right now, please try again later"
+    );
+  await prisma.chatbotLog.create({
+    data: { userId: user.id, messageText: inputValue, responseText: output },
+  });
+}
+
+export async function getChatLogs() {
+  const user = await thisUser;
+  if (!user) throw new Error("User not found");
+  const logs = await prisma.chatbotLog.findMany({
+    where: { userId: user.id },
+    orderBy: { timestamp: "asc" },
+  });
+  return logs;
 }

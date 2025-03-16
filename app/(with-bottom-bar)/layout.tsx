@@ -1,5 +1,11 @@
-import ScreenWrap from "@/components/ui2/screen-wrap";
+import BottomBar from "@/components/ui2/bottom-bar";
 
 export default function Layout({ children }: PropsWithChildren) {
-  return <ScreenWrap>{children}</ScreenWrap>;
+  return (
+    <div className="h-screen-safe flex flex-col">
+      {children}
+
+      <BottomBar />
+    </div>
+  );
 }

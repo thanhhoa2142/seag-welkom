@@ -30,7 +30,7 @@ export default function TipsOfTheDay() {
   if (!currentTip) return null;
 
   return (
-    <div className="absolute bottom-11 left-0 p-2">
+    <div className="absolute bottom-14 left-0 p-2">
       <div className="absolute top-5 right-4 space-x-2">
         <Button size={"iconSm"} variant={"outline"} onClick={showRandomTip}>
           <RefreshCcwIcon />
@@ -44,7 +44,7 @@ export default function TipsOfTheDay() {
         </Button>
       </div>
 
-      <Card className="w-full">
+      <Card className="w-full shadow-lg">
         <CardHeader>
           <div className="text-sm text-slate-500 flex items-center">
             <Image

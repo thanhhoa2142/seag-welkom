@@ -5,5 +5,5 @@ export const dsLangflowClient = new LangflowClient({
 });
 
 export const mainLangflow = dsLangflowClient.flow(
-  "94f4fe19-a4e9-49de-a274-de2f0b747103"
+  "d55d747a-a10e-45b4-8883-5fbc88923ef6"
 );
