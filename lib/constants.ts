@@ -253,6 +253,31 @@ export const categoryTitleMap: Record<LocationTag, string> = {
   CULTURAL: "🥮 Aficionado",
   NATURE: "🍀 Ecologist",
 };
+export const categoryUiAttributeMap: Record<
+  LocationTag,
+  { color: string; description: string }
+> = {
+  HISTORICAL: {
+    color: "#C23A2B",
+    description:
+      "Dive into the past and explore landmarks, monuments, and stories that shaped history.",
+  },
+  ART: {
+    color: "#D07F1E",
+    description:
+      "Celebrate creativity by discovering galleries, murals, and artistic masterpieces.",
+  },
+  CULTURAL: {
+    color: "#C435C0",
+    description:
+      "Immerse yourself in traditions, festivals, and cuisines that define diverse cultures.",
+  },
+  NATURE: {
+    color: "#007B5D",
+    description:
+      "Reconnect with the outdoors through lush landscapes, wildlife, and serene natural beauty.",
+  },
+};
 
 export const mockFriends = [
   {
@@ -308,3 +333,14 @@ export const mockFriends = [
     isActive: false,
   },
 ];
+
+import BadgeHistorical from "../public/badges/HISTORICAL.svg";
+import BadgeNature from "../public/badges/NATURE.svg";
+import BadgeCultural from "../public/badges/CULTURAL.svg";
+import BadgeArt from "../public/badges/ART.svg";
+export const categoryBadges = {
+  [LocationTag.HISTORICAL]: BadgeHistorical,
+  [LocationTag.NATURE]: BadgeNature,
+  [LocationTag.CULTURAL]: BadgeCultural,
+  [LocationTag.ART]: BadgeArt,
+};

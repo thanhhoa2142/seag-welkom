@@ -49,7 +49,7 @@ export async function RecentChallenge() {
           See all
         </Button>
       </header>
-      <div className="w-full bg-accent rounded-md p-2">
+      <div className="w-full bg-accent rounded-md p-2 pb-3">
         <div className="flex items-center space-x-4">
           {/* Banner Image */}
           <div className="relative w-20 h-20 rounded-lg overflow-hidden">

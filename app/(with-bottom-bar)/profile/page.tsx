@@ -1,7 +1,11 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Info, QrCode, Settings2 } from "lucide-react";
-import { categoryTitleMap, pointToGetBadge } from "@/lib/constants";
+import {
+  categoryBadges,
+  categoryTitleMap,
+  pointToGetBadge,
+} from "@/lib/constants";
 import EmojiAvatar from "@/components/ui2/emoji-avatar";
 import { prisma, thisUser } from "@/lib/db";
 import { LocationTag } from "@prisma/client";
@@ -13,17 +17,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import BadgeHistorical from "../../../public/badges/HISTORICAL.svg";
-import BadgeNature from "../../../public/badges/NATURE.svg";
-import BadgeCultural from "../../../public/badges/CULTURAL.svg";
-import BadgeArt from "../../../public/badges/ART.svg";
-
-const categoryBadges = {
-  [LocationTag.HISTORICAL]: BadgeHistorical,
-  [LocationTag.NATURE]: BadgeNature,
-  [LocationTag.CULTURAL]: BadgeCultural,
-  [LocationTag.ART]: BadgeArt,
-};
 
 export default async function ProfilePage() {
   const user = await thisUser;

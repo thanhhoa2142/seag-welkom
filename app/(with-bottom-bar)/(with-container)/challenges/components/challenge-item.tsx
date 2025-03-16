@@ -14,7 +14,7 @@ export default function ChallengeItem({
   return (
     <div
       className={cn(
-        "block cursor-pointer rounded-lg bg-emerald-700/10 hover:bg-gray-100 pt-0 overflow-hidden",
+        "block cursor-pointer rounded-lg bg-accent hover:bg-gray-100 pt-0 overflow-hidden",
         className
       )}
     >
