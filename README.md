@@ -1,4 +1,10 @@
+<img src="https://github.com/user-attachments/assets/bf0c8ca2-7d1d-438d-bfc1-518e24ecb8d9" width="40" height="40"/>
+SEAG
+
+
 ## Welkom
+
+![2025-03-16 16 34 53](https://github.com/user-attachments/assets/9d99928f-771a-4e7b-9975-3d840cf41db7)
 
 ### 1. 📲 Sign In / Sign Up (Phone-based)
 
@@ -63,7 +69,7 @@ Must-have Feature: Start immersive GPS/AR exploration journey
 
 ---
 
-### 6. 📋 Checklist Completion at Locations\*\*
+### 6. 📋 Checklist Completion at Locations
 
 Must-have Feature: Task list per location (learning, exploring)
 
