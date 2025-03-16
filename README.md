@@ -25,7 +25,7 @@ Must-have Feature: Capture user interests and preferences for personalized journ
 
 ---
 
-### 3. 🎯 User Preferences Tailoring + Matching Algorithm\*\*
+### 3. 🎯 User Preferences Tailoring + Matching Algorithm
 
 Must-have Feature: Match users using LLM/NLP-based clustering
 
