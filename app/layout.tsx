@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SEAG Welkom",
-  description: "SEAG Welkom Application",
+  title: "Welkom",
+  description:
+    "A gamified platform for international students to explore, connect, and adapt local services.",
   manifest: "/manifest.json",
   icons: {
     apple: [
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "SEAG Welkom",
+    title: "Welkom",
   },
 };
 
@@ -34,7 +35,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "oklch(0.696 0.17 162.48)",
+  themeColor: "white",
   viewportFit: "cover",
   userScalable: false,
 };

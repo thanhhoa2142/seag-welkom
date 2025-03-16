@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 
 const ICONS_DIR = path.join(process.cwd(), "public", "icons");
-const SOURCE_ICON = path.join(process.cwd(), "public", "app-icon.png");
+const SOURCE_ICON = path.join(process.cwd(), "public", "app-icon.jpg");
 
 const SIZES = [72, 96, 128, 144, 152, 192, 384, 512];
 
