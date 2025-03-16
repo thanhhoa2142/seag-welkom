@@ -13,7 +13,7 @@
 
 ---
 
-### 2. 📝 User Preference Questionnaire\*\*
+### 2. 📝 User Preference Questionnaire
 
 Must-have Feature: Capture user interests and preferences for personalized journey
 
