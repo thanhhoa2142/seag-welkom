@@ -64,7 +64,7 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-1 bg-blue-700/30 overflow-hidden">
       <div className="font-bold flex items-center gap-1 text-lg px-4 pt-4">
         <Image
           src={"/chatbot.png"}
@@ -75,12 +75,12 @@ export default function Chatbot() {
         />
         Kom - Chatbot
       </div>
-      <div className="text-sm text-gray-500 py-1 pl-4 pr-8">
+      <div className="text-sm text-gray-500 pt-1 pl-4 pr-8 pb-2">
         Hi, I am Kom, your personal assistant. This is private message, end to
         end encrypted...
       </div>
 
-      <div className="flex-1 overflow-y-hidden space-y-2 p-4 bg-white">
+      <div className="flex-1 overflow-y-auto space-y-2 p-4 bg-white">
         {messages.map((mes) => (
           <div
             key={mes.id}
