@@ -200,12 +200,12 @@ model WeeklyRecommendation {
 }
 
 model ChatConnection {
-  id         String   @id @default(uuid())
-  userOneId  String   @map("user_one_id")
-  userTwoId  String   @map("user_two_id")
-  providerId String   @map("provider_id") // For external chat provider reference
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  userOneId String   @map("user_one_id")
+  userTwoId String   @map("user_two_id")
+  message   String   @map("message_text") @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
   userOne User @relation("ChatUserOne", fields: [userOneId], references: [id])

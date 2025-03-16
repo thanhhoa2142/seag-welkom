@@ -85,6 +85,19 @@ async function main() {
       status: "ACCEPTED",
     })),
   });
+  // Add chat friends for rin
+  await prisma.chatConnection.createMany({
+    data: users.map((user) => {
+      const fromId = [rin.id, user.id][Math.round(Math.random())];
+      const toId = fromId === rin.id ? user.id : rin.id;
+      return {
+        userOneId: fromId,
+        userTwoId: toId,
+        message: faker.lorem.words(15),
+        createdAt: faker.date.past({ years: 1 }),
+      };
+    }),
+  });
 
   const createTask = (task: string) => ({
     description: task,
