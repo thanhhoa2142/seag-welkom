@@ -50,7 +50,7 @@ Must-have Feature: Show engaging challenge in game-like card
 
 ---
 
-### 5. 🧭 Location-based Challenge Journey (GPS + AR)\*\*
+### 5. 🧭 Location-based Challenge Journey (GPS + AR)
 
 Must-have Feature: Start immersive GPS/AR exploration journey
 
